@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:KantorLr1"
         xmlns:vm="clr-namespace:KantorLr1.ViewModels"
         mc:Ignorable="d"
-        Title="{Binding Path=Title}" Height="450" Width="800">
+        Title="{Binding Path=Title}" Height="450" Width="900">
     <Window.DataContext>
         <vm:MainWindowViewModel/>
     </Window.DataContext>
@@ -51,7 +51,34 @@
                 </StackPanel>
             </GroupBox>
             <GroupBox Grid.Column="1" Header="Results">
-                
+                <StackPanel>
+                    <WrapPanel Orientation="Horizontal">
+                        <TextBlock Text="Solution status:   "/>
+                        <TextBlock Text="Binding" Width="100" TextWrapping="Wrap"/>
+                        <TextBlock Text="Solution's accuracy:   "/>
+                        <TextBlock Text="Binding" TextWrapping="Wrap"/>
+                    </WrapPanel>
+                    <WrapPanel Margin="0, 15">
+                        <TextBox Height="50" Width="200"/>
+                        <TextBlock Text="Solution" VerticalAlignment="Center" TextWrapping="Wrap"
+                                   Margin="15, 0"/>
+                    </WrapPanel>
+                    <WrapPanel Margin="0, 15">
+                        <TextBox Height="150" Width="200"/>
+                        <TextBlock Text="Inverse matrix" VerticalAlignment="Center" TextWrapping="Wrap"
+                                   Margin="15, 0"/>
+                    </WrapPanel>
+                    <WrapPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Determinant value: "/>
+                            <TextBox Width="70"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="10, 0, 0, 0">
+                            <TextBlock Text="Product of matrix norms" TextWrapping="WrapWithOverflow"/>
+                            <TextBox Width="70" Margin="5, 0, 0, 0"/>
+                        </StackPanel>
+                    </WrapPanel>
+                </StackPanel>
             </GroupBox>
         </Grid>
     </DockPanel>
