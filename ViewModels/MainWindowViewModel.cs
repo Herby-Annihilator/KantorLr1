@@ -79,7 +79,7 @@ namespace KantorLr1.ViewModels
 		{
 			try
 			{
-				string[] rows = MatrixA.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+				string[] rows = MatrixA.Split("\r\n", StringSplitOptions.RemoveEmptyEntries);
 				double[][] matrix = new double[rows.Length][];
 				for (int i = 0; i < rows.Length; i++)
 				{
@@ -93,6 +93,7 @@ namespace KantorLr1.ViewModels
 				InputOutput.SaveMatrixToFileCorrectly("input.dat", matrix);
 				DestroyMatrix();
 				CacheTheMatrix(matrix);
+				Status = "Matrix was saved";
 			}
 			catch(Exception e)
 			{
@@ -119,6 +120,7 @@ namespace KantorLr1.ViewModels
 				InputOutput.SaveVectorToFileCorrectly("input.dat", vector);
 				DestroyVector();
 				CacheTheVector(vector);
+				Status = "Vector was saved";
 			}
 			catch(Exception e)
 			{
@@ -163,6 +165,7 @@ namespace KantorLr1.ViewModels
 					DestroyVector();
 					CacheTheVector(vector);
 				}
+				Status = "Data restored";
 			}
 			catch (Exception e)
 			{
@@ -184,30 +187,34 @@ namespace KantorLr1.ViewModels
 				ClearResultsFields();
 				Answer answer = reshala.SolveSystemOfLinearAlgebraicEquations(matrix, vector,
 					MethodType.Gauss);
-				solutionStatus = answer.AnswerStatus.ToString();
+				SolutionStatus = answer.AnswerStatus.ToString();
 				if (answer.AnswerStatus == AnswerStatus.OneSolution)
 				{
 					if (answer.Solution != null)
 					{
 						for (int i = 0; i < answer.Solution[0].Length; i++)
 						{
-							Solution += answer.Solution[0][i] + " ";
+							Solution += Math.Round(answer.Solution[0][i], 5) + "\r\n";
 						}
 						double[][] reversedMatrix = GetReversedMatrix();
 						for (int i = 0; i < reversedMatrix.GetLength(0); i++)
 						{
 							for (int j = 0; j < reversedMatrix[i].GetLength(0); j++)
 							{
-								InverseMatrix += reversedMatrix[i][j] + " ";
+								InverseMatrix += Math.Round(reversedMatrix[i][j], 5) + " ";
 							}
 							InverseMatrix += "\r\n";
 						}
 						double[] resids = GetResiduals(answer);
-						for (int i = 0; i < residuals.Length; i++)
+						for (int i = 0; i < resids.Length; i++)
 						{
-							Residuals += "String " + i + " has residual: " + resids[i] + "\r\n";
+							Residuals += "String " + i + " has residual: " + Math.Round(resids[i], 5) + "\r\n";
 						}
-						DeterminantValue += answer.Determinant;
+						SetAccuracy(resids);
+						DeterminantValue += Math.Round(answer.Determinant, 5);
+						double firstNorm = reshala.GetMatrixMNorm(matrix);
+						double secondNorm = reshala.GetMatrixMNorm(reversedMatrix);
+						ProductOfMatrixNorms = Math.Round((firstNorm * secondNorm), 5).ToString();
 					}
 				}
 			}
@@ -222,6 +229,35 @@ namespace KantorLr1.ViewModels
 			return !(matrix == null || vector == null);
 		}
 		#endregion
+
+		private void SetAccuracy(double[] answer)
+		{
+			int index = FindMaxAbsInArray(answer);
+			if (Math.Abs(answer[index]) > 0 && Math.Abs(answer[index]) < 3)
+			{
+				SolutionAccuracy = "Good";
+			}
+			else if (Math.Abs(answer[index]) >= 3 && Math.Abs(answer[index]) < 7)
+			{
+				SolutionAccuracy = "Not good";
+			}
+			else
+			{
+				SolutionAccuracy = "Terrible";
+			}
+		}
+		private int FindMaxAbsInArray(double[] arr)
+		{
+			int index = 0;
+			for (int i = 0; i < arr.Length; i++)
+			{
+				if (Math.Abs(arr[i]) > Math.Abs(arr[index]))
+				{
+					index = i;
+				}
+			}
+			return index;
+		}
 
 		private void CacheTheMatrix(double[][] matr)
 		{

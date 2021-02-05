@@ -30,7 +30,8 @@
             <GroupBox Grid.Column="0" Header="Input data">
                 <StackPanel>
                     <WrapPanel Orientation="Horizontal">
-                        <TextBox Height="150" Width="200"/>
+                        <TextBox Height="150" Width="200" TextWrapping="Wrap" AcceptsReturn="True"
+                                 Text="{Binding Path=MatrixA, UpdateSourceTrigger=PropertyChanged}"/>
                         <StackPanel Margin="30, 0, 0, 0">
                             <TextBlock Text="Please, input here your matrix"/>
                             <TextBlock Text="To separate the"/>
@@ -39,7 +40,7 @@
                         </StackPanel>
                     </WrapPanel>
                     <WrapPanel Orientation="Horizontal" Margin="0, 20">
-                        <TextBox Height="50" Width="200" VerticalAlignment="Top"/>
+                        <TextBox Height="50" Width="200" VerticalAlignment="Top" Text="{Binding Path=VectorB, UpdateSourceTrigger=PropertyChanged}"/>
                         <StackPanel Margin="30, 0, 0, 0">
                             <TextBlock Text="Please, input here your vector"/>
                             <TextBlock Text="on one line. To separate the"/>
@@ -63,17 +64,20 @@
                         <TextBlock Text="{Binding Path=SolutionAccuracy}" TextWrapping="Wrap"/>
                     </WrapPanel>
                     <WrapPanel Margin="0, 15">
-                        <TextBox Height="50" Width="200" Text="{Binding Path=Solution}"/>
+                        <TextBox Height="50" Width="200" Text="{Binding Path=Solution, UpdateSourceTrigger=PropertyChanged}" 
+                                 AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
                         <TextBlock Text="Solution" VerticalAlignment="Center" TextWrapping="Wrap"
                                    Margin="10, 0"/>
                         <StackPanel Orientation="Vertical">
                             <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 5">
                                 <TextBlock Text="Determinant value: "/>
-                                <TextBox Width="70" HorizontalAlignment="Right" Text="{Binding Path=DeterminantValue}"/>
+                                <TextBox Width="100" HorizontalAlignment="Right" Text="{Binding Path=DeterminantValue, UpdateSourceTrigger=PropertyChanged}"
+                                         VerticalScrollBarVisibility="Auto"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0, 5, 0, 0">
                                 <TextBlock Text="Product of matrix norms" TextWrapping="Wrap"/>
-                                <TextBox Width="50" Margin="5, 0, 0, 0" Text="{Binding Path=ProductOfMatrixNorms}"/>
+                                <TextBox Width="70" Margin="5, 0, 0, 0" Text="{Binding Path=ProductOfMatrixNorms, UpdateSourceTrigger=PropertyChanged}"
+                                         VerticalScrollBarVisibility="Auto"/>
                             </StackPanel>
                         </StackPanel>
                     </WrapPanel>
@@ -81,11 +85,14 @@
                         <StackPanel>
                             <TextBlock Text="Inverse matrix" VerticalAlignment="Center" TextWrapping="Wrap"
                                    Margin="15, 0"/>
-                            <TextBox Height="150" Width="200" Text="{Binding Path=InverseMatrix}"/>
+                            <TextBox Height="150" Width="auto" 
+                                     Text="{Binding Path=InverseMatrix, UpdateSourceTrigger=PropertyChanged}"
+                                     HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
+                                     MinWidth="200"/>
                         </StackPanel>
                         <StackPanel Margin="15, 0">
                             <TextBlock Text="Residuals" TextWrapping="Wrap"/>
-                            <TextBox Height="150" Width="100" Text="{Binding Path=Residuals}"/>
+                            <TextBox Height="150" Width="Auto" MinWidth="100" Text="{Binding Path=Residuals, UpdateSourceTrigger=PropertyChanged}"/>
                         </StackPanel>
                     </WrapPanel>
                 </StackPanel>
