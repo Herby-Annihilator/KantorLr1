@@ -196,13 +196,18 @@ namespace KantorLr1.ViewModels
 						double[][] reversedMatrix = GetReversedMatrix();
 						for (int i = 0; i < reversedMatrix.GetLength(0); i++)
 						{
-							for (int j = 0; j < reversedMatrix[i].Length; j++)
+							for (int j = 0; j < reversedMatrix[i].GetLength(0); j++)
 							{
 								InverseMatrix += reversedMatrix[i][j] + " ";
 							}
 							InverseMatrix += "\r\n";
 						}
-
+						double[] resids = GetResiduals(answer);
+						for (int i = 0; i < residuals.Length; i++)
+						{
+							Residuals += "String " + i + " has residual: " + resids[i] + "\r\n";
+						}
+						DeterminantValue += answer.Determinant;
 					}
 				}
 			}
@@ -214,7 +219,7 @@ namespace KantorLr1.ViewModels
 		}
 		private bool CanGetSolutionCommandExecute(object param)
 		{
-			return matrix == null || vector == null;
+			return !(matrix == null || vector == null);
 		}
 		#endregion
 
@@ -266,6 +271,26 @@ namespace KantorLr1.ViewModels
 				nextIndex++;
 			}
 			return reversedMatrix;
+		}
+
+		private double[] GetResiduals(Answer answer)
+		{
+			if (answer.Solution != null)
+			{
+				double[] resid = new double[vector.Length];
+				double sum;
+				for (int i = 0; i < resid.Length; i++)
+				{
+					sum = 0;
+					for (int j = 0; j < matrix[i].Length; j++)
+					{
+						sum += matrix[i][j] * answer.Solution[0][j];
+					}
+					resid[i] = vector[i] - sum;
+				}
+				return resid;
+			}
+			return null;
 		}
 	}
 }
