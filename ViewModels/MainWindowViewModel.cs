@@ -187,7 +187,23 @@ namespace KantorLr1.ViewModels
 				solutionStatus = answer.AnswerStatus.ToString();
 				if (answer.AnswerStatus == AnswerStatus.OneSolution)
 				{
+					if (answer.Solution != null)
+					{
+						for (int i = 0; i < answer.Solution[0].Length; i++)
+						{
+							Solution += answer.Solution[0][i] + " ";
+						}
+						double[][] reversedMatrix = GetReversedMatrix();
+						for (int i = 0; i < reversedMatrix.GetLength(0); i++)
+						{
+							for (int j = 0; j < reversedMatrix[i].Length; j++)
+							{
+								InverseMatrix += reversedMatrix[i][j] + " ";
+							}
+							InverseMatrix += "\r\n";
+						}
 
+					}
 				}
 			}
 			catch(Exception e)
@@ -224,6 +240,32 @@ namespace KantorLr1.ViewModels
 		private void DestroyVector()
 		{
 			vector = null;
+		}
+
+		private double[][] GetReversedMatrix()
+		{
+			double[][] reversedMatrix = new double[matrix.GetLength(0)][];
+			for (int i = 0; i < reversedMatrix.Length; i++)
+			{
+				reversedMatrix[i] = new double[matrix[i].Length];
+			}
+			int colsCount = reversedMatrix[0].Length;
+			double[] tmpVector = new double[vector.Length];
+			List<double[]> currentSolution;
+			int nextIndex = 0;
+			for (int i = 0; i < colsCount; i++)
+			{
+				tmpVector[nextIndex] = 1;
+				currentSolution = reshala.SolveSystemOfLinearAlgebraicEquations(matrix, tmpVector,
+					MethodType.Gauss).Solution;
+				for (int j = 0; j < reversedMatrix.GetLength(0); j++)
+				{
+					reversedMatrix[j][i] = currentSolution[0][j];
+				}
+				tmpVector[nextIndex] = 0;
+				nextIndex++;
+			}
+			return reversedMatrix;
 		}
 	}
 }
