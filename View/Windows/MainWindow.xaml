@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:KantorLr1"
         xmlns:vm="clr-namespace:KantorLr1.ViewModels"
         mc:Ignorable="d"
-        Title="{Binding Path=Title}" Height="450" Width="900">
+        Title="{Binding Path=Title}" Height="450" Width="988">
     <Window.DataContext>
         <vm:MainWindowViewModel/>
     </Window.DataContext>
@@ -35,7 +35,7 @@
                             <TextBlock Text="Please, input here your matrix"/>
                             <TextBlock Text="To separate the"/>
                             <TextBlock Text="numbers use space bar"/>
-                            <Button Content="Save matrix" Margin="0, 10"/>
+                            <Button Content="Save matrix" Margin="0, 10" Command="{Binding Path=SaveMatrixCommand}"/>
                         </StackPanel>
                     </WrapPanel>
                     <WrapPanel Orientation="Horizontal" Margin="0, 20">
@@ -44,38 +44,48 @@
                             <TextBlock Text="Please, input here your vector"/>
                             <TextBlock Text="on one line. To separate the"/>
                             <TextBlock Text="numbers use space bar"/>
-                            <Button Content="Save vector" Margin="0, 10"/>
+                            <Button Content="Save vector" Margin="0, 10" Command="{Binding Path=SaveVectorCommand}"/>
                         </StackPanel>
                     </WrapPanel>
-                    <Button Content="GetSolution" HorizontalAlignment="Right"/>
+                    <WrapPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="Restore data from file" Command="{Binding Path=RestoreDataFromFileCommand}"/>
+                        <Button Content="GetSolution" Margin="5, 0"/>
+                    </WrapPanel>
+                    
                 </StackPanel>
             </GroupBox>
             <GroupBox Grid.Column="1" Header="Results">
                 <StackPanel>
                     <WrapPanel Orientation="Horizontal">
                         <TextBlock Text="Solution status:   "/>
-                        <TextBlock Text="Binding" Width="100" TextWrapping="Wrap"/>
+                        <TextBlock Text="{Binding Path=SolutionStatus}" Width="100" TextWrapping="Wrap"/>
                         <TextBlock Text="Solution's accuracy:   "/>
-                        <TextBlock Text="Binding" TextWrapping="Wrap"/>
+                        <TextBlock Text="{Binding Path=SolutionAccuracy}" TextWrapping="Wrap"/>
                     </WrapPanel>
                     <WrapPanel Margin="0, 15">
-                        <TextBox Height="50" Width="200"/>
+                        <TextBox Height="50" Width="200" Text="{Binding Path=Solution}"/>
                         <TextBlock Text="Solution" VerticalAlignment="Center" TextWrapping="Wrap"
-                                   Margin="15, 0"/>
-                    </WrapPanel>
-                    <WrapPanel Margin="0, 15">
-                        <TextBox Height="150" Width="200"/>
-                        <TextBlock Text="Inverse matrix" VerticalAlignment="Center" TextWrapping="Wrap"
-                                   Margin="15, 0"/>
-                    </WrapPanel>
-                    <WrapPanel Orientation="Horizontal">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Determinant value: "/>
-                            <TextBox Width="70"/>
+                                   Margin="10, 0"/>
+                        <StackPanel Orientation="Vertical">
+                            <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 5">
+                                <TextBlock Text="Determinant value: "/>
+                                <TextBox Width="70" HorizontalAlignment="Right" Text="{Binding Path=DeterminantValue}"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0, 5, 0, 0">
+                                <TextBlock Text="Product of matrix norms" TextWrapping="Wrap"/>
+                                <TextBox Width="50" Margin="5, 0, 0, 0" Text="{Binding Path=ProductOfMatrixNorms}"/>
+                            </StackPanel>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="10, 0, 0, 0">
-                            <TextBlock Text="Product of matrix norms" TextWrapping="WrapWithOverflow"/>
-                            <TextBox Width="70" Margin="5, 0, 0, 0"/>
+                    </WrapPanel>
+                    <WrapPanel Margin="0, 15" Orientation="Horizontal">
+                        <StackPanel>
+                            <TextBlock Text="Inverse matrix" VerticalAlignment="Center" TextWrapping="Wrap"
+                                   Margin="15, 0"/>
+                            <TextBox Height="150" Width="200" Text="{Binding Path=InverseMatrix}"/>
+                        </StackPanel>
+                        <StackPanel Margin="15, 0">
+                            <TextBlock Text="Residuals" TextWrapping="Wrap"/>
+                            <TextBox Height="150" Width="100" Text="{Binding Path=Residuals}"/>
                         </StackPanel>
                     </WrapPanel>
                 </StackPanel>
