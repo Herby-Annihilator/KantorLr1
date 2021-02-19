@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:KantorLr1"
         xmlns:vm="clr-namespace:KantorLr1.ViewModels"
         mc:Ignorable="d"
-        Title="{Binding Path=Title}" Height="450" Width="988">
+        Title="{Binding Path=Title}" Height="463" Width="889">
     <Window.DataContext>
         <vm:MainWindowViewModel/>
     </Window.DataContext>
@@ -16,87 +16,126 @@
                 <MenuItem Header="Exit"/>
             </MenuItem>
             <MenuItem Header="Help">
-                
+
             </MenuItem>
         </Menu>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem Content="{Binding Path=Status}"/>
         </StatusBar>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <GroupBox Grid.Column="0" Header="Input data">
-                <StackPanel>
-                    <WrapPanel Orientation="Horizontal">
-                        <TextBox Height="150" Width="200" TextWrapping="Wrap" AcceptsReturn="True"
-                                 Text="{Binding Path=MatrixA, UpdateSourceTrigger=PropertyChanged}"/>
-                        <StackPanel Margin="30, 0, 0, 0">
-                            <TextBlock Text="Please, input here your matrix"/>
-                            <TextBlock Text="To separate the"/>
-                            <TextBlock Text="numbers use space bar"/>
-                            <Button Content="Save matrix" Margin="0, 10" Command="{Binding Path=SaveMatrixCommand}"/>
-                        </StackPanel>
-                    </WrapPanel>
-                    <WrapPanel Orientation="Horizontal" Margin="0, 20">
-                        <TextBox Height="50" Width="200" VerticalAlignment="Top" Text="{Binding Path=VectorB, UpdateSourceTrigger=PropertyChanged}"/>
-                        <StackPanel Margin="30, 0, 0, 0">
-                            <TextBlock Text="Please, input here your vector"/>
-                            <TextBlock Text="on one line. To separate the"/>
-                            <TextBlock Text="numbers use space bar"/>
-                            <Button Content="Save vector" Margin="0, 10" Command="{Binding Path=SaveVectorCommand}"/>
-                        </StackPanel>
-                    </WrapPanel>
-                    <WrapPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button Content="Restore data from file" Command="{Binding Path=RestoreDataFromFileCommand}"/>
-                        <Button Content="GetSolution" Margin="5, 0" Command="{Binding Path=GetSolutionCommand}"/>
-                    </WrapPanel>
-                    
-                </StackPanel>
-            </GroupBox>
-            <GroupBox Grid.Column="1" Header="Results">
-                <StackPanel>
-                    <WrapPanel Orientation="Horizontal">
-                        <TextBlock Text="Solution status:   "/>
-                        <TextBlock Text="{Binding Path=SolutionStatus}" Width="100" TextWrapping="Wrap"/>
-                        <TextBlock Text="Solution's accuracy:   "/>
-                        <TextBlock Text="{Binding Path=SolutionAccuracy}" TextWrapping="Wrap"/>
-                    </WrapPanel>
-                    <WrapPanel Margin="0, 15">
-                        <TextBox Height="50" Width="200" Text="{Binding Path=Solution, UpdateSourceTrigger=PropertyChanged}" 
-                                 AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
-                        <TextBlock Text="Solution" VerticalAlignment="Center" TextWrapping="Wrap"
-                                   Margin="10, 0"/>
-                        <StackPanel Orientation="Vertical">
-                            <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 5">
-                                <TextBlock Text="Determinant value: "/>
-                                <TextBox Width="100" HorizontalAlignment="Right" Text="{Binding Path=DeterminantValue, UpdateSourceTrigger=PropertyChanged}"
-                                         VerticalScrollBarVisibility="Auto"/>
+        <TabControl>
+            <TabItem Header="Решение СЛАУ">
+                <TabItem.Content>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <GroupBox Header="Ввод данных">
+                            <Grid>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="216*"/>
+                                        <RowDefinition Height="127*"/>
+                                    </Grid.RowDefinitions>
+                                    <WrapPanel Orientation="Horizontal">
+                                        <StackPanel Margin="5, 5">
+                                            <TextBlock TextWrapping="Wrap" Width="200" Text="Вводите исходную матрицу в поле ниже. Для разделения чисел используйте пробел."/>
+                                            <TextBox Height="150" TextWrapping="Wrap" AcceptsReturn="True"
+                                                 VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                                                 Margin="0, 5" Text="{Binding Path=MatrixA, UpdateSourceTrigger=PropertyChanged}"/>
+                                        </StackPanel>
+                                        <StackPanel HorizontalAlignment="Stretch" Margin="5,5">
+                                            <TextBlock TextWrapping="Wrap" Width="200" Text="Вводите вектор свободных членов в поле ниже. Для разделения чисел используйте пробел."/>
+                                            <TextBox VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                                                 Margin="0, 5" Text="{Binding Path=VectorB, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <Button Content="Сохранить матрицу" Margin="0, 10, 0, 0"
+                                                    Command="{Binding Path=SaveMatrixCommand}"/>
+                                            <Button Content="Сохранить вектор" Margin="0, 15"
+                                                    Command="{Binding Path=SaveVectorCommand}"/>
+                                            <Button Content="Восстановить данные из файла"
+                                                    Command="{Binding Path=RestoreDataFromFileCommand}"/>
+                                        </StackPanel>
+                                    </WrapPanel>
+                                    <Grid Grid.Row="1">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            
+                                        </Grid.ColumnDefinitions>
+                                        <GroupBox Grid.Row="1" Header="Используемый метод решения">
+                                            <StackPanel>
+                                                <RadioButton Content="Метод Гаусса" Margin="0, 5"/>
+                                                <RadioButton Content="Метод квадратного корня"/>
+                                            </StackPanel>
+                                        </GroupBox>
+                                        <Button Grid.Column="1" Content="Решить" VerticalAlignment="Bottom"
+                                                Width="150" HorizontalAlignment="Right" Margin="0,0,20,0"
+                                                Command="{Binding Path=GetSolutionCommand}"/>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox Grid.Column="1" Header="Результаты">
+                            <StackPanel>
+                                <WrapPanel>
+                                    <TextBlock TextWrapping="Wrap" Text="Статус решения:"/>
+                                    <TextBlock Width="90" Text="{Binding Path=SolutionStatus}" Margin="5, 0"/>
+                                    <TextBlock TextWrapping="Wrap" Text="Точность решения:" Margin="5, 0"/>
+                                    <TextBlock Width="90" Text="{Binding Path=SolutionAccuracy}"/>
+                                </WrapPanel>
+                                <WrapPanel Orientation="Horizontal" Margin="0, 7">
+                                    <StackPanel>
+                                        <TextBlock TextWrapping="Wrap" Width="100" Text="Решение"/>
+                                        <TextBox Height="150" Margin="0, 5" TextWrapping="Wrap"
+                                                 HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
+                                                 Text="{Binding Path=Solution, UpdateSourceTrigger=PropertyChanged}"
+                                                 IsReadOnly="True"/>
+                                    </StackPanel>
+                                    <StackPanel Margin="10, 0">
+                                        <TextBlock TextWrapping="Wrap" Width="110" Text="Обратная матрица"/>
+                                        <TextBox Height="150" Margin="0, 5" TextWrapping="Wrap" Width="200"
+                                                 HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
+                                                 Text="{Binding Path=InverseMatrix, UpdateSourceTrigger=PropertyChanged}"
+                                                 IsReadOnly="True"/>
+                                    </StackPanel>
+                                    <StackPanel>
+                                        <TextBlock TextWrapping="Wrap" Width="70" Text="Невязки"/>
+                                        <TextBox Height="150" Margin="0, 5" TextWrapping="Wrap" Width="100"
+                                                 HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
+                                                 Text="{Binding Path=Residuals, UpdateSourceTrigger=PropertyChanged}"
+                                                 IsReadOnly="True"/>
+                                    </StackPanel>
+                                </WrapPanel>
+                                <StackPanel HorizontalAlignment="Center">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Норма исходной матрицы:"/>
+                                        <TextBlock Margin="10, 0" Text="Binding"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <StackPanel HorizontalAlignment="Center" Margin="0, 10">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Произведение норм:"/>
+                                        <TextBlock Margin="10, 0" Text="{Binding Path=ProductOfMatrixNorms}"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <StackPanel HorizontalAlignment="Center">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Определитель:"/>
+                                        <TextBlock Margin="10, 0" Text="{Binding Path=DeterminantValue}"/>
+                                    </StackPanel>
+                                </StackPanel>
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal" Margin="0, 5, 0, 0">
-                                <TextBlock Text="Product of matrix norms" TextWrapping="Wrap"/>
-                                <TextBox Width="70" Margin="5, 0, 0, 0" Text="{Binding Path=ProductOfMatrixNorms, UpdateSourceTrigger=PropertyChanged}"
-                                         VerticalScrollBarVisibility="Auto"/>
-                            </StackPanel>
-                        </StackPanel>
-                    </WrapPanel>
-                    <WrapPanel Margin="0, 15" Orientation="Horizontal">
-                        <StackPanel>
-                            <TextBlock Text="Inverse matrix" VerticalAlignment="Center" TextWrapping="Wrap"
-                                   Margin="15, 0"/>
-                            <TextBox Height="150" Width="auto" 
-                                     Text="{Binding Path=InverseMatrix, UpdateSourceTrigger=PropertyChanged}"
-                                     HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
-                                     MinWidth="200"/>
-                        </StackPanel>
-                        <StackPanel Margin="15, 0">
-                            <TextBlock Text="Residuals" TextWrapping="Wrap"/>
-                            <TextBox Height="150" Width="Auto" MinWidth="100" Text="{Binding Path=Residuals, UpdateSourceTrigger=PropertyChanged}"/>
-                        </StackPanel>
-                    </WrapPanel>
-                </StackPanel>
-            </GroupBox>
-        </Grid>
+                        </GroupBox>
+                    </Grid>
+                </TabItem.Content>
+            </TabItem>
+            <TabItem Header="Исследование">
+                <TabItem.Content>
+                    <Grid>
+
+                    </Grid>
+                </TabItem.Content>
+            </TabItem>
+        </TabControl>
     </DockPanel>
 </Window>

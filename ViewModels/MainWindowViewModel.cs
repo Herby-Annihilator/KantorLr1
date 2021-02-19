@@ -186,7 +186,7 @@ namespace KantorLr1.ViewModels
 			{
 				ClearResultsFields();
 				Answer answer = reshala.SolveSystemOfLinearAlgebraicEquations(matrix, vector,
-					MethodType.Gauss);
+					MethodType.SquareRoot);
 				SolutionStatus = answer.AnswerStatus.ToString();
 				if (answer.AnswerStatus == AnswerStatus.OneSolution)
 				{
@@ -196,7 +196,7 @@ namespace KantorLr1.ViewModels
 						{
 							Solution += Math.Round(answer.Solution[0][i], 5) + "\r\n";
 						}
-						double[][] reversedMatrix = GetReversedMatrix();
+						double[][] reversedMatrix = reshala.GetReversedMatrix(matrix, MethodType.SquareRoot);
 						for (int i = 0; i < reversedMatrix.GetLength(0); i++)
 						{
 							for (int j = 0; j < reversedMatrix[i].GetLength(0); j++)
@@ -215,6 +215,7 @@ namespace KantorLr1.ViewModels
 						double firstNorm = reshala.GetMatrixMNorm(matrix);
 						double secondNorm = reshala.GetMatrixMNorm(reversedMatrix);
 						ProductOfMatrixNorms = Math.Round((firstNorm * secondNorm), 5).ToString();
+						Status = "Successful!";
 					}
 				}
 			}
@@ -281,32 +282,6 @@ namespace KantorLr1.ViewModels
 		private void DestroyVector()
 		{
 			vector = null;
-		}
-
-		private double[][] GetReversedMatrix()
-		{
-			double[][] reversedMatrix = new double[matrix.GetLength(0)][];
-			for (int i = 0; i < reversedMatrix.Length; i++)
-			{
-				reversedMatrix[i] = new double[matrix[i].Length];
-			}
-			int colsCount = reversedMatrix[0].Length;
-			double[] tmpVector = new double[vector.Length];
-			List<double[]> currentSolution;
-			int nextIndex = 0;
-			for (int i = 0; i < colsCount; i++)
-			{
-				tmpVector[nextIndex] = 1;
-				currentSolution = reshala.SolveSystemOfLinearAlgebraicEquations(matrix, tmpVector,
-					MethodType.Gauss).Solution;
-				for (int j = 0; j < reversedMatrix.GetLength(0); j++)
-				{
-					reversedMatrix[j][i] = currentSolution[0][j];
-				}
-				tmpVector[nextIndex] = 0;
-				nextIndex++;
-			}
-			return reversedMatrix;
 		}
 
 		private double[] GetResiduals(Answer answer)
