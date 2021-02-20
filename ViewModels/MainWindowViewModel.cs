@@ -7,6 +7,8 @@ using KantorLr1.ViewModels.Base;
 using KantorLr1.Infrastructure.Commands;
 using CompMathLibrary;
 using CompMathLibrary.Methods;
+using KantorLr1.Model;
+using System.Collections.ObjectModel;
 
 namespace KantorLr1.ViewModels
 {
@@ -15,8 +17,10 @@ namespace KantorLr1.ViewModels
 		private CMReshala reshala;
 		double[][] matrix;
 		double[] vector;
+		private MethodType methodType;
 		public MainWindowViewModel()
 		{
+			methodType = MethodType.Gauss;
 			matrix = null;
 			vector = null;
 			reshala = new CMReshala();
@@ -25,6 +29,9 @@ namespace KantorLr1.ViewModels
 			RestoreDataFromFileCommand = new LambdaCommand(OnRestoreDataFromFileCommandExecuted, 
 				CanRestoreDataFromFileCommandExecute);
 			GetSolutionCommand = new LambdaCommand(OnGetSolutionCommandExecuted, CanGetSolutionCommandExecute);
+			RadioButtonCommand = new LambdaCommand(OnRadioButtonCommandExecuted, CanRadioButtonCommandExecute);
+			CompareCommand = new LambdaCommand(OnCompareCommandExecuted, CanCompareCommandExecute);
+			SearchCommand = new LambdaCommand(OnSearchCommandExecited, CanSearchCommandExecute);
 		}
 		
 		#region Properties
@@ -60,6 +67,20 @@ namespace KantorLr1.ViewModels
 
 		private string solution;
 		public string Solution { get => solution; set => Set(ref solution, value); }
+
+		private string gaussSolution;
+		public string GaussSolution { get => gaussSolution; set => Set(ref gaussSolution, value); }
+
+		private string squareRootSolution;
+		public string SquareRootSolution { get => squareRootSolution; set => Set(ref squareRootSolution, value); }
+
+		private string differences;
+		public string Differences { get => differences; set => Set(ref differences, value); }
+		
+		private string numberN;
+		public string NumberN { get => numberN; set => Set(ref numberN, value); }
+
+		public ObservableCollection<Dependence> Dependences { get; set; } = new ObservableCollection<Dependence>();
 		#endregion
 
 		private void ClearResultsFields()
@@ -186,7 +207,7 @@ namespace KantorLr1.ViewModels
 			{
 				ClearResultsFields();
 				Answer answer = reshala.SolveSystemOfLinearAlgebraicEquations(matrix, vector,
-					MethodType.SquareRoot);
+					methodType);
 				SolutionStatus = answer.AnswerStatus.ToString();
 				if (answer.AnswerStatus == AnswerStatus.OneSolution)
 				{
@@ -196,7 +217,7 @@ namespace KantorLr1.ViewModels
 						{
 							Solution += Math.Round(answer.Solution[0][i], 5) + "\r\n";
 						}
-						double[][] reversedMatrix = reshala.GetReversedMatrix(matrix, MethodType.SquareRoot);
+						double[][] reversedMatrix = reshala.GetReversedMatrix(matrix, methodType);
 						for (int i = 0; i < reversedMatrix.GetLength(0); i++)
 						{
 							for (int j = 0; j < reversedMatrix[i].GetLength(0); j++)
@@ -228,6 +249,87 @@ namespace KantorLr1.ViewModels
 		private bool CanGetSolutionCommandExecute(object param)
 		{
 			return !(matrix == null || vector == null);
+		}
+
+		public ICommand RadioButtonCommand { get; }
+		private void OnRadioButtonCommandExecuted(object param)
+		{
+			if ((string)param == "Gauss")
+			{
+				methodType = MethodType.Gauss;
+			}
+			else if ((string)param == "SquareRoot")
+			{
+				methodType = MethodType.SquareRoot;
+			}
+		}
+		private bool CanRadioButtonCommandExecute(object param)
+		{
+			return true;
+		}
+
+		public ICommand CompareCommand { get; }
+		private void OnCompareCommandExecuted(object param)
+		{
+			try
+			{
+				Differences = "";
+				GaussSolution = "";
+				SquareRootSolution = "";
+				Answer gauss = reshala.SolveSystemOfLinearAlgebraicEquations(matrix, vector, MethodType.Gauss);
+				Answer square = reshala.SolveSystemOfLinearAlgebraicEquations(matrix, vector, MethodType.SquareRoot);
+				for (int i = 0; i < gauss.Solution[0].Length; i++)
+				{
+					GaussSolution += "x" + (i + 1) + " =  " + gauss.Solution[0][i] + "\r\n";
+					SquareRootSolution += "x" + (i + 1) + " =  " + square.Solution[0][i] + "\r\n";
+					Differences += "Gauss(" + (i + 1) + ") - SquareRoot(" + (i + 1) + ") = " +
+						(Math.Abs(gauss.Solution[0][i]) - Math.Abs(square.Solution[0][i])) + "\r\n";
+				}
+			}
+			catch(Exception e)
+			{
+				Status = "Operation failed. Reason: " + e.Message;
+			}
+		}
+		private bool CanCompareCommandExecute(object param)
+		{
+			return CanGetSolutionCommandExecute(param);
+		}
+
+		public ICommand SearchCommand { get; }
+		private void OnSearchCommandExecited(object param)
+		{
+			try
+			{
+				int.TryParse(NumberN, out int number);
+				Dependences.Clear();
+				double conditionNumber;
+				double[][] gilbertMatrix;
+				for (int k = 2; k <= number; k++)
+				{
+					gilbertMatrix = reshala.CreateGilbertMatrix(k);
+					conditionNumber = reshala.GetMatrixMNorm(gilbertMatrix);
+					gilbertMatrix = reshala.GetReversedMatrix(gilbertMatrix);
+					conditionNumber *= reshala.GetMatrixMNorm(gilbertMatrix);
+					Dependences.Add(new Dependence(k, conditionNumber));
+				}
+			}
+			catch(Exception e)
+			{
+				Status = "Operation failed. Reason: " + e.Message;
+			}			
+		}
+		
+		private bool CanSearchCommandExecute(object param)
+		{
+			if (int.TryParse(NumberN, out int number))
+			{
+				if (number > 1 && number < 8)
+				{
+					return true;
+				}
+			}
+			return false;
 		}
 		#endregion
 

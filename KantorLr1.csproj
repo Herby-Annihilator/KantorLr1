@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Model\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="CompMathLibrary">
       <HintPath>..\..\Semester_5\Math\CompMathLibrary\bin\Debug\netcoreapp3.1\CompMathLibrary.dll</HintPath>
     </Reference>
