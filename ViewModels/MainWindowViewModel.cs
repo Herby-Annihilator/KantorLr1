@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
 using System.IO;
-using KantorLr1.ViewModels.Base;
 using KantorLr1.Infrastructure.Commands;
 using CompMathLibrary;
 using CompMathLibrary.Methods;
@@ -12,12 +11,8 @@ using System.Collections.ObjectModel;
 
 namespace KantorLr1.ViewModels
 {
-	public class MainWindowViewModel : BaseViewModel
+	public class MainWindowViewModel : ContentControlViewModel
 	{
-		private CMReshala reshala;
-		double[][] matrix;
-		double[] vector;
-		private MethodType methodType;
 		public MainWindowViewModel()
 		{
 			methodType = MethodType.Gauss;
@@ -35,8 +30,6 @@ namespace KantorLr1.ViewModels
 		}
 		
 		#region Properties
-		private string status = "Hello";
-		public string Status { get => status; set => Set(ref status, value); }
 
 		private string title = "GaussMethod";
 		public string Title { get => title; set => Set(ref title, value); }

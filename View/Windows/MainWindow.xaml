@@ -23,7 +23,7 @@
             <StatusBarItem Content="{Binding Path=Status}"/>
         </StatusBar>
         <TabControl>
-            <TabItem Header="Решение СЛАУ">
+            <TabItem Header="Прямые методы решения СЛАУ">
                 <TabItem.Content>
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -60,7 +60,7 @@
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition/>
                                             <ColumnDefinition/>
-                                            
+
                                         </Grid.ColumnDefinitions>
                                         <GroupBox Grid.Row="1" Header="Используемый метод решения">
                                             <StackPanel>
@@ -187,6 +187,219 @@
                             </StackPanel>
                         </GroupBox>
                     </Grid>
+                </TabItem.Content>
+            </TabItem>
+            <TabItem Header="Итерационные методы">
+                <TabItem.DataContext>
+                    <vm:IterativeMethodsViewModel/>
+                </TabItem.DataContext>
+                <TabItem.Content>
+                    <TabControl TabStripPlacement="Left" VerticalContentAlignment="Center">
+                        <TabItem Header="Решение СЛАУ" FlowDirection="LeftToRight">
+                            <TabItem.Content>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="423*"/>
+                                        <ColumnDefinition Width="358*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <GroupBox Grid.Column="0" Header="Ввод данных" Margin="0,0,0,0">
+                                        <Grid>
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="44*"/>
+                                                    <RowDefinition Height="15*"/>
+                                                </Grid.RowDefinitions>
+                                                <WrapPanel Orientation="Horizontal">
+                                                    <StackPanel Margin="5, 5">
+                                                        <TextBlock TextWrapping="Wrap" Width="150" Text="Вводите исходную матрицу в поле ниже. Для разделения чисел используйте пробел."/>
+                                                        <TextBox Height="100" TextWrapping="Wrap" AcceptsReturn="True"
+                                                 VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                                                 Margin="0, 5" Text=""/>
+                                                        <Button Content="Сохранить матрицу" Margin="0, 10, 0, 0"
+                                                    Command=""/>
+                                                        <StackPanel Orientation="Horizontal" Margin="0, 5">
+                                                            <TextBlock TextWrapping="Wrap" Text="Желаемая точность" Width="70"/>
+                                                            <TextBox VerticalAlignment="Center" Margin="3, 0" Width="70"/>
+                                                        </StackPanel>
+                                                    </StackPanel>
+                                                    <StackPanel HorizontalAlignment="Stretch" Margin="5, 5, 0, 5">
+                                                        <TextBlock TextWrapping="Wrap" Width="210" Text="Вводите вектор свободных членов в поле ниже. Для разделения чисел используйте пробел."/>
+                                                        <TextBox VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                                                 Margin="0, 5" Text=""/>
+                                                        <Button Content="Сохранить вектор" Margin="0, 5"
+                                                    Command=""/>
+                                                        <TextBlock TextWrapping="Wrap" Width="200" Text="Вводите вектор начального приближения в поле ниже. Для разделения чисел используйте пробел."/>
+                                                        <TextBox VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                                                 Margin="0, 5" Text=""/>
+
+                                                        <Button Content="Сохранить приближение" Margin="0,5"/>
+                                                        <Button Content="Восстановить данные из файла" Margin="0,5"
+                                                    Command=""/>
+                                                    </StackPanel>
+                                                </WrapPanel>
+                                                <Grid Grid.Row="1" Margin="0,5,0,0">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition/>
+                                                        <ColumnDefinition/>
+
+                                                    </Grid.ColumnDefinitions>
+                                                    <GroupBox Grid.Row="1" Header="Используемый метод решения">
+                                                        <StackPanel>
+                                                            <RadioButton Content="Метод Якоби" Margin="0, 5" IsChecked="True" CommandParameter="Gauss"
+                                                             Command=""/>
+                                                            <RadioButton Content="Метод Зейделя" CommandParameter="SquareRoot"
+                                                             Command=""/>
+                                                        </StackPanel>
+                                                    </GroupBox>
+                                                    <Button Grid.Column="1" VerticalAlignment="Center"
+                                                            HorizontalAlignment="Right" Width="150">
+                                                        <TextBlock Text="Автоматическая генерация данных" TextWrapping="Wrap"/>
+                                                    </Button>
+                                                    <Button Grid.Column="1" Content="Решить" VerticalAlignment="Bottom"
+                                                Width="150" HorizontalAlignment="Right"
+                                                Command=""/>
+                                                </Grid>
+                                            </Grid>
+                                        </Grid>
+                                    </GroupBox>
+                                    <GroupBox Grid.Column="1" Header="Результаты">
+                                        <StackPanel>
+                                            <WrapPanel>
+                                                <TextBlock TextWrapping="Wrap" Text="Статус решения:"/>
+                                                <TextBlock Width="90" Text="" Margin="5, 0"/>
+                                                <TextBlock TextWrapping="Wrap" Text="Точность решения:" Margin="5, 0"/>
+                                                <TextBlock Width="90" Text=""/>
+                                            </WrapPanel>
+                                            <WrapPanel Orientation="Horizontal" Margin="0, 7">
+                                                <StackPanel>
+                                                    <TextBlock TextWrapping="Wrap" Width="70" Text="Решение"/>
+                                                    <TextBox Height="150" Margin="0, 5" TextWrapping="Wrap"
+                                                 HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
+                                                 Text=""
+                                                 IsReadOnly="True"/>
+                                                </StackPanel>
+                                                <StackPanel Margin="10, 0">
+                                                    <TextBlock TextWrapping="Wrap" Width="110" Text="Обратная матрица"/>
+                                                    <TextBox Height="150" Margin="0, 5" TextWrapping="Wrap" Width="150"
+                                                 HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
+                                                 Text=""
+                                                 IsReadOnly="True"/>
+                                                </StackPanel>
+                                                <StackPanel>
+                                                    <TextBlock TextWrapping="Wrap" Width="70" Text="Невязки"/>
+                                                    <TextBox Height="150" Margin="0, 5" TextWrapping="Wrap" Width="100"
+                                                 HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
+                                                 Text=""
+                                                 IsReadOnly="True"/>
+                                                </StackPanel>
+                                            </WrapPanel>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="Норма исходной матрицы:"/>
+                                                    <TextBlock Margin="10, 0" Text="Binding"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                            <StackPanel HorizontalAlignment="Center" Margin="0, 10">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="Произведение норм:"/>
+                                                    <TextBlock Margin="10, 0" Text=""/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="Фактическое число итераций:"/>
+                                                    <TextBlock Margin="10, 0" Text=""/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0, 10">
+                                                <TextBlock Text="Условие диагонального преобладания:"/>
+                                                <TextBlock Margin="10, 0"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </GroupBox>
+                                </Grid>
+                            </TabItem.Content>
+                        </TabItem>
+                        <TabItem Header="Исследование">
+                            <TabItem.Content>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="3*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <GroupBox Grid.Column="0" Header="Зависимость от точности">
+                                        <StackPanel>
+                                            <TextBlock TextWrapping="Wrap" Text="Задайте начальные параметры для расчета числа итераций в зависимости от приближения."/>
+                                            <StackPanel Orientation="Horizontal" Margin="0,5">
+                                                <TextBox Width="50" Margin="0,0,15,0" VerticalAlignment="Center"/>
+                                                <TextBlock TextWrapping="Wrap" Text="Начальная точность" Width="100"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0,5">
+                                                <TextBox Width="50" Margin="0,0,15,0" VerticalAlignment="Center"/>
+                                                <TextBlock TextWrapping="Wrap" Text="Конечная точность" Width="100"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0,5">
+                                                <TextBox Width="50" Margin="0,0,15,0" VerticalAlignment="Center"/>
+                                                <TextBlock TextWrapping="Wrap" Text="Шаг изменения точности" Width="100"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Button Content="Расчитать" Width="80"/>
+                                                <Button Content="Очистить" Margin="10,0,0,0" Width="80"/>
+                                            </StackPanel>
+                                            <DataGrid Margin="0,5" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
+                                                  CanUserReorderColumns="False" CanUserSortColumns="False"
+                                                  AlternatingRowBackground="Aquamarine" HorizontalGridLinesBrush="Black"
+                                                  VerticalGridLinesBrush="LightGray">
+                                                <DataGrid.Columns>
+                                                    <DataGridTextColumn Header="Точность" Width="*"/>
+                                                    <DataGridTextColumn Header="Число итераций"/>
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                        </StackPanel>
+                                    </GroupBox>
+                                    <GroupBox Grid.Column="1" Header="Зависимость от приближения">
+                                        <StackPanel>
+                                            <TextBlock TextWrapping="Wrap" Text="В поле ниже введите коллекцию приближений, для которых вы хотите провести вычисления. Каждое новове приближение на новой строке, числа разделяются пробелами."/>
+                                            <TextBox TextWrapping="Wrap" AcceptsReturn="True" Height="100" VerticalScrollBarVisibility="Auto"
+                                                 HorizontalScrollBarVisibility="Auto" Margin="0,5"/>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Button Content="Рассчитать" Width="80"/>
+                                                <Button Content="Очистить" Margin="10,0,0,0" Width="80"/>
+                                            </StackPanel>
+                                            <DataGrid Margin="0,5" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
+                                                  CanUserReorderColumns="False" CanUserSortColumns="False"
+                                                  AlternatingRowBackground="BurlyWood" HorizontalGridLinesBrush="Black"
+                                                  VerticalGridLinesBrush="LightGray">
+                                                <DataGrid.Columns>
+                                                    <DataGridTextColumn Header="Приближение" Width="*"/>
+                                                    <DataGridTextColumn Header="Число итераций"/>
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                        </StackPanel>
+                                    </GroupBox>
+                                    <GroupBox Grid.Column="2" Header="Зависимость от метода">
+                                        <StackPanel>
+                                            <TextBlock TextWrapping="Wrap" Text="Для рассчета нажмите кнопку ниже. При рассчете используются данные из вклдки 'Решение СЛАУ'"/>
+                                            <StackPanel Orientation="Horizontal" Margin="0,5">
+                                                <Button Content="Рассчитать" Width="80"/>
+                                                <Button Content="Очистить" Margin="10,0,0,0" Width="80"/>
+                                            </StackPanel>
+                                            <DataGrid Margin="0,5" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
+                                                  CanUserReorderColumns="False" CanUserSortColumns="False"
+                                                  AlternatingRowBackground="LavenderBlush" HorizontalGridLinesBrush="Black"
+                                                  VerticalGridLinesBrush="LightGray">
+                                                <DataGrid.Columns>
+                                                    <DataGridTextColumn Header="Метод" Width="*"/>
+                                                    <DataGridTextColumn Header="Число итераций"/>
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                        </StackPanel>
+                                    </GroupBox>
+                                </Grid>
+                            </TabItem.Content>
+                        </TabItem>
+                    </TabControl>
                 </TabItem.Content>
             </TabItem>
         </TabControl>
