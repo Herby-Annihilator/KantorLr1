@@ -13,6 +13,6 @@ namespace KantorLr1.ViewModels
 		protected CMReshala reshala;
 		protected double[][] matrix;
 		protected double[] vector;
-		protected MethodType methodType;
+		protected DirectMethodType methodType;
 	}
 }

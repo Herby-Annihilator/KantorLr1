@@ -15,7 +15,7 @@ namespace KantorLr1.ViewModels
 	{
 		public MainWindowViewModel()
 		{
-			methodType = MethodType.Gauss;
+			methodType = DirectMethodType.Gauss;
 			matrix = null;
 			vector = null;
 			reshala = new CMReshala();
@@ -249,11 +249,11 @@ namespace KantorLr1.ViewModels
 		{
 			if ((string)param == "Gauss")
 			{
-				methodType = MethodType.Gauss;
+				methodType = DirectMethodType.Gauss;
 			}
 			else if ((string)param == "SquareRoot")
 			{
-				methodType = MethodType.SquareRoot;
+				methodType = DirectMethodType.SquareRoot;
 			}
 		}
 		private bool CanRadioButtonCommandExecute(object param)
@@ -269,8 +269,8 @@ namespace KantorLr1.ViewModels
 				Differences = "";
 				GaussSolution = "";
 				SquareRootSolution = "";
-				Answer gauss = reshala.SolveSystemOfLinearAlgebraicEquations(matrix, vector, MethodType.Gauss);
-				Answer square = reshala.SolveSystemOfLinearAlgebraicEquations(matrix, vector, MethodType.SquareRoot);
+				Answer gauss = reshala.SolveSystemOfLinearAlgebraicEquations(matrix, vector, DirectMethodType.Gauss);
+				Answer square = reshala.SolveSystemOfLinearAlgebraicEquations(matrix, vector, DirectMethodType.SquareRoot);
 				for (int i = 0; i < gauss.Solution[0].Length; i++)
 				{
 					GaussSolution += "x" + (i + 1) + " =  " + gauss.Solution[0][i] + "\r\n";
