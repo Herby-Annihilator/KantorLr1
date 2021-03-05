@@ -39,7 +39,7 @@ namespace KantorLr1
 		}
 		internal static void ConfigureServices(HostBuilderContext host, IServiceCollection services)
 		{
-			services.AddSingleton<MainWindowViewModel>();
+			services.RegisterViewModels();
 		}
 
 		public static string CurrentDirectory => IsDesignMode ? Path.GetDirectoryName(GetSourceCodePath())

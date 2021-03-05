@@ -16,7 +16,6 @@
   <ItemGroup>
     <Folder Include="Resources\DataTemplates\" />
     <Folder Include="Resources\Styles\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
   <ItemGroup>

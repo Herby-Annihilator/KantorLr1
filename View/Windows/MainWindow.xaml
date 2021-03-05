@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:KantorLr1"
         xmlns:vm="clr-namespace:KantorLr1.ViewModels"
         mc:Ignorable="d"
-        DataContext="{vm:MainWindowViewModel}"
+        DataContext="{Binding MainWindowViewModel, Source={StaticResource Locator}}"
         Title="{Binding Path=Title}" Height="467" Width="889">
     <!--<Window.DataContext>
         <vm:MainWindowViewModel/>
@@ -190,10 +190,7 @@
                     </Grid>
                 </TabItem.Content>
             </TabItem>
-            <TabItem Header="Итерационные методы">
-                <TabItem.DataContext>
-                    <vm:IterativeMethodsViewModel/>
-                </TabItem.DataContext>
+            <TabItem Header="Итерационные методы" DataContext="{Binding IterativeMethodsViewModel, Source={StaticResource Locator}}">
                 <TabItem.Content>
                     <TabControl TabStripPlacement="Left" VerticalContentAlignment="Center">
                         <TabItem Header="Решение СЛАУ" FlowDirection="LeftToRight">
@@ -235,7 +232,7 @@
 
                                                         <Button Content="Сохранить приближение" Margin="0,5"/>
                                                         <Button Content="Восстановить данные из файла" Margin="0,5"
-                                                    Command=""/>
+                                                    Command="{Binding SaveApproximationCommand}"/>
                                                     </StackPanel>
                                                 </WrapPanel>
                                                 <Grid Grid.Row="1" Margin="0,5,0,0">
