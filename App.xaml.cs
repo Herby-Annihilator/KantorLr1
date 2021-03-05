@@ -7,6 +7,8 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Runtime.CompilerServices;
+using System.IO;
 
 namespace KantorLr1
 {
@@ -37,6 +39,14 @@ namespace KantorLr1
 		internal static void ConfigureServices(HostBuilderContext host, IServiceCollection services)
 		{
 			
+		}
+
+		public static string CurrentDirectory => IsDesignMode ? Path.GetDirectoryName(GetSourceCodePath())
+			: Environment.CurrentDirectory;
+
+		private static string GetSourceCodePath([CallerFilePath] string path = null)
+		{
+			return path;
 		}
 	}
 }

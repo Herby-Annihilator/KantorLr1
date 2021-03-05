@@ -19,10 +19,10 @@ namespace KantorLr1
 		public static IHostBuilder CreateHostBuilder(string[] args)
 		{
 			IHostBuilder hostBuilder = Host.CreateDefaultBuilder(args);
-			hostBuilder.UseContentRoot(Environment.CurrentDirectory);
+			hostBuilder.UseContentRoot(App.CurrentDirectory);
 			hostBuilder.ConfigureAppConfiguration((host, config) =>
 			{
-				config.SetBasePath(Environment.CurrentDirectory);
+				config.SetBasePath(App.CurrentDirectory);
 				config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
 			});
 			hostBuilder.ConfigureServices(App.ConfigureServices);
