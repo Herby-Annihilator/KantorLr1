@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Configuration;
 
 namespace KantorLr1
 {
@@ -12,6 +14,19 @@ namespace KantorLr1
 			var app = new App();
 			app.InitializeComponent();
 			app.Run();
+		}
+
+		public static IHostBuilder CreateHostBuilder(string[] args)
+		{
+			IHostBuilder hostBuilder = Host.CreateDefaultBuilder(args);
+			hostBuilder.UseContentRoot(Environment.CurrentDirectory);
+			hostBuilder.ConfigureAppConfiguration((host, config) =>
+			{
+				config.SetBasePath(Environment.CurrentDirectory);
+				config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+			});
+			hostBuilder.ConfigureServices(App.ConfigureServices);
+			return hostBuilder;
 		}
 	}
 }
