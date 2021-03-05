@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Runtime.CompilerServices;
 using System.IO;
+using KantorLr1.ViewModels;
 
 namespace KantorLr1
 {
@@ -38,7 +39,7 @@ namespace KantorLr1
 		}
 		internal static void ConfigureServices(HostBuilderContext host, IServiceCollection services)
 		{
-			
+			services.AddSingleton<MainWindowViewModel>();
 		}
 
 		public static string CurrentDirectory => IsDesignMode ? Path.GetDirectoryName(GetSourceCodePath())

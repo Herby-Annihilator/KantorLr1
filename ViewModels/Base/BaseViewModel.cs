@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows.Markup;
 
 namespace KantorLr1.ViewModels.Base
 {
-	public abstract class BaseViewModel : INotifyPropertyChanged
+	public abstract class BaseViewModel : MarkupExtension, INotifyPropertyChanged
 	{
 		public event PropertyChangedEventHandler PropertyChanged;
 		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -22,6 +23,10 @@ namespace KantorLr1.ViewModels.Base
 			field = value;
 			OnPropertyChanged(propertyName);
 			return true;
+		}
+		public override object ProvideValue(IServiceProvider serviceProvider)
+		{
+			return this;
 		}
 	}
 }

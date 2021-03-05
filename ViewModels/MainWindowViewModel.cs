@@ -8,9 +8,11 @@ using CompMathLibrary;
 using CompMathLibrary.Methods;
 using KantorLr1.Model;
 using System.Collections.ObjectModel;
+using System.Windows.Markup;
 
 namespace KantorLr1.ViewModels
 {
+	[MarkupExtensionReturnType(typeof(MainWindowViewModel))]
 	public class MainWindowViewModel : ContentControlViewModel
 	{
 		public MainWindowViewModel()

@@ -6,10 +6,11 @@
         xmlns:local="clr-namespace:KantorLr1"
         xmlns:vm="clr-namespace:KantorLr1.ViewModels"
         mc:Ignorable="d"
+        DataContext="{vm:MainWindowViewModel}"
         Title="{Binding Path=Title}" Height="467" Width="889">
-    <Window.DataContext>
+    <!--<Window.DataContext>
         <vm:MainWindowViewModel/>
-    </Window.DataContext>
+    </Window.DataContext>-->
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="File">

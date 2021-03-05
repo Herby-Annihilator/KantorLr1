@@ -7,9 +7,11 @@ using CompMathLibrary;
 using KantorLr1.Infrastructure.Commands;
 using KantorLr1.Model.IterativeSearching;
 using System.IO;
+using System.Windows.Markup;
 
 namespace KantorLr1.ViewModels
 {
+	[MarkupExtensionReturnType(typeof(IterativeMethodsViewModel))]
 	public class IterativeMethodsViewModel : ContentControlViewModel
 	{
 		private double[] approximation;
