@@ -15,6 +15,7 @@ namespace KantorLr1.ViewModels
 	[MarkupExtensionReturnType(typeof(MainWindowViewModel))]
 	public class MainWindowViewModel : ContentControlViewModel
 	{
+		private DirectMethodType methodType;
 		public MainWindowViewModel()
 		{
 			methodType = DirectMethodType.Gauss;

@@ -21,6 +21,7 @@ namespace KantorLr1.Infrastructure.Commands
 
 		public override void Execute(object parameter)
 		{
+			if (!CanExecute(parameter)) return;
 			execute.Invoke(parameter);
 		}
 	}

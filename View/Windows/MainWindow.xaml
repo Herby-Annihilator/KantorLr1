@@ -213,27 +213,27 @@
                                                         <TextBlock TextWrapping="Wrap" Width="150" Text="Вводите исходную матрицу в поле ниже. Для разделения чисел используйте пробел."/>
                                                         <TextBox Height="100" TextWrapping="Wrap" AcceptsReturn="True"
                                                  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
-                                                 Margin="0, 5" Text=""/>
+                                                 Margin="0, 5" Text="{Binding MatrixA, UpdateSourceTrigger=PropertyChanged}"/>
                                                         <Button Content="Сохранить матрицу" Margin="0, 10, 0, 0"
-                                                    Command=""/>
+                                                    Command="{Binding SaveMatrixCommand}"/>
                                                         <StackPanel Orientation="Horizontal" Margin="0, 5">
                                                             <TextBlock TextWrapping="Wrap" Text="Желаемая точность" Width="70"/>
-                                                            <TextBox VerticalAlignment="Center" Margin="3, 0" Width="70"/>
+                                                            <TextBox VerticalAlignment="Center" Margin="3, 0" Width="70" Text="{Binding StartPrecison, UpdateSourceTrigger=PropertyChanged}"/>
                                                         </StackPanel>
                                                     </StackPanel>
                                                     <StackPanel HorizontalAlignment="Stretch" Margin="5, 5, 0, 5">
                                                         <TextBlock TextWrapping="Wrap" Width="210" Text="Вводите вектор свободных членов в поле ниже. Для разделения чисел используйте пробел."/>
                                                         <TextBox VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
-                                                 Margin="0, 5" Text=""/>
+                                                 Margin="0, 5" Text="{Binding VectorB, UpdateSourceTrigger=PropertyChanged}"/>
                                                         <Button Content="Сохранить вектор" Margin="0, 5"
-                                                    Command=""/>
+                                                    Command="{Binding SaveVectorCommand}"/>
                                                         <TextBlock TextWrapping="Wrap" Width="200" Text="Вводите вектор начального приближения в поле ниже. Для разделения чисел используйте пробел."/>
                                                         <TextBox VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
-                                                 Margin="0, 5" Text=""/>
+                                                 Margin="0, 5" Text="{Binding StartApproximation, UpdateSourceTrigger=PropertyChanged}"/>
 
-                                                        <Button Content="Сохранить приближение" Margin="0,5"/>
+                                                        <Button Content="Сохранить приближение" Margin="0,5" Command="{Binding SaveApproximationCommand}"/>
                                                         <Button Content="Восстановить данные из файла" Margin="0,5"
-                                                    Command="{Binding SaveApproximationCommand}"/>
+                                                    Command="{Binding RestoreDataFromFileCommand}"/>
                                                     </StackPanel>
                                                 </WrapPanel>
                                                 <Grid Grid.Row="1" Margin="0,5,0,0">
@@ -244,10 +244,10 @@
                                                     </Grid.ColumnDefinitions>
                                                     <GroupBox Grid.Row="1" Header="Используемый метод решения">
                                                         <StackPanel>
-                                                            <RadioButton Content="Метод Якоби" Margin="0, 5" IsChecked="True" CommandParameter="Gauss"
-                                                             Command=""/>
-                                                            <RadioButton Content="Метод Зейделя" CommandParameter="SquareRoot"
-                                                             Command=""/>
+                                                            <RadioButton Content="Метод Якоби" Margin="0, 5" IsChecked="True" CommandParameter="Jacobi"
+                                                             Command="{Binding RadioButtonCommand}"/>
+                                                            <RadioButton Content="Метод Зейделя" CommandParameter="Seidel"
+                                                             Command="{Binding RadioButtonCommand}"/>
                                                         </StackPanel>
                                                     </GroupBox>
                                                     <Button Grid.Column="1" VerticalAlignment="Center"
@@ -259,7 +259,7 @@
                                                     </Button>
                                                     <Button Grid.Column="1" Content="Решить" VerticalAlignment="Bottom"
                                                 Width="150" HorizontalAlignment="Right"
-                                                Command=""/>
+                                                Command="{Binding GetSolutionCommand}"/>
                                                 </Grid>
                                             </Grid>
                                         </Grid>
@@ -268,54 +268,54 @@
                                         <StackPanel>
                                             <WrapPanel>
                                                 <TextBlock TextWrapping="Wrap" Text="Статус решения:"/>
-                                                <TextBlock Width="90" Text="" Margin="5, 0"/>
+                                                <TextBlock Width="90" Margin="5, 0" Text="{Binding SolutionStatus}"/>
                                                 <TextBlock TextWrapping="Wrap" Text="Точность решения:" Margin="5, 0"/>
-                                                <TextBlock Width="90" Text=""/>
+                                                <TextBlock Width="90" Text="{Binding SolutionAccuracy}"/>
                                             </WrapPanel>
                                             <WrapPanel Orientation="Horizontal" Margin="0, 7">
                                                 <StackPanel>
                                                     <TextBlock TextWrapping="Wrap" Width="70" Text="Решение"/>
                                                     <TextBox Height="150" Margin="0, 5" TextWrapping="Wrap"
                                                  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
-                                                 Text=""
+                                                 Text="{Binding Solution, UpdateSourceTrigger=PropertyChanged}"
                                                  IsReadOnly="True"/>
                                                 </StackPanel>
                                                 <StackPanel Margin="10, 0">
                                                     <TextBlock TextWrapping="Wrap" Width="110" Text="Обратная матрица"/>
                                                     <TextBox Height="150" Margin="0, 5" TextWrapping="Wrap" Width="150"
                                                  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
-                                                 Text=""
+                                                 Text="{Binding ReversedMatrix, UpdateSourceTrigger=PropertyChanged}"
                                                  IsReadOnly="True"/>
                                                 </StackPanel>
                                                 <StackPanel>
                                                     <TextBlock TextWrapping="Wrap" Width="70" Text="Невязки"/>
                                                     <TextBox Height="150" Margin="0, 5" TextWrapping="Wrap" Width="100"
                                                  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
-                                                 Text=""
+                                                 Text="{Binding Residuals, UpdateSourceTrigger=PropertyChanged}"
                                                  IsReadOnly="True"/>
                                                 </StackPanel>
                                             </WrapPanel>
                                             <StackPanel HorizontalAlignment="Center">
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="Норма исходной матрицы:"/>
-                                                    <TextBlock Margin="10, 0" Text="Binding"/>
+                                                    <TextBlock Margin="10, 0" Text="{Binding MatrixANorm}"/>
                                                 </StackPanel>
                                             </StackPanel>
                                             <StackPanel HorizontalAlignment="Center" Margin="0, 10">
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="Произведение норм:"/>
-                                                    <TextBlock Margin="10, 0" Text=""/>
+                                                    <TextBlock Margin="10, 0" Text="{Binding ProductOfMatrixNorms}"/>
                                                 </StackPanel>
                                             </StackPanel>
                                             <StackPanel HorizontalAlignment="Center">
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="Фактическое число итераций:"/>
-                                                    <TextBlock Margin="10, 0" Text=""/>
+                                                    <TextBlock Margin="10, 0" Text="{Binding NumberOfIterations}"/>
                                                 </StackPanel>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0, 10">
                                                 <TextBlock Text="Условие диагонального преобладания:"/>
-                                                <TextBlock Margin="10, 0"/>
+                                                <TextBlock Margin="10, 0" Text="{Binding DiagonalDominanceCondition}"/>
                                             </StackPanel>
                                         </StackPanel>
                                     </GroupBox>
