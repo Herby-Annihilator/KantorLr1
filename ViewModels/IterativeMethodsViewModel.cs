@@ -270,10 +270,9 @@ namespace KantorLr1.ViewModels
 				DestroyApproximation();
 			}
 		}
-		private bool CanRestoreDataFromFileCommandExecute(object param)
-		{
-			return true;
-		}
+		private bool CanRestoreDataFromFileCommandExecute(object param) =>
+			File.Exists(FILE_TO_SAVE_DATA) && File.Exists(APPROXIMATION_FILE);
+
 
 		public ICommand GetSolutionCommand { get; }
 		private void OnGetSolutionCommandExecuted(object param)
@@ -300,16 +299,15 @@ namespace KantorLr1.ViewModels
 				{
 					for (int j = 0; j < reversedMatrix[i].Length; j++)
 					{
-						ReversedMatrix += reversedMatrix[i][i] + " ";
+						ReversedMatrix += Math.Round(reversedMatrix[i][j], 5) + " ";
 					}
 					ReversedMatrix += "\r\n";
 				}
 				NumberOfIterations = answer.NumberOfIterations.ToString();
-				//
-				// Установить условие диагонального преобладания
-				//
+				DiagonalDominanceCondition = answer.ConditionOfDiagonalDominance.ToString();
 				double firstNorm = reshala.GetMatrixMNorm(matrix);
 				double secondNorm = reshala.GetMatrixMNorm(reversedMatrix);
+				MatrixANorm = firstNorm.ToString();
 				ProductOfMatrixNorms = Math.Round((firstNorm * secondNorm), 5).ToString();
 				Status = "Successful!";
 			}
@@ -321,8 +319,8 @@ namespace KantorLr1.ViewModels
 		private bool CanGetSolutionCommandExecute(object param) =>
 			!(string.IsNullOrWhiteSpace(MatrixA) || 
 			string.IsNullOrWhiteSpace(VectorB) ||
-			string.IsNullOrWhiteSpace(StartApproximation) ||
-			!double.TryParse(DesiredPrecision, out double a));
+			string.IsNullOrWhiteSpace(StartApproximation)) &&
+			double.TryParse(DesiredPrecision, out double a);
 
 		public ICommand RadioButtonCommand { get; }
 		private void OnRadioButtonCommandExecuted(object param)
