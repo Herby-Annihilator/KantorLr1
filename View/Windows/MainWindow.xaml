@@ -335,28 +335,31 @@
                                         <StackPanel>
                                             <TextBlock TextWrapping="Wrap" Text="Задайте начальные параметры для расчета числа итераций в зависимости от приближения."/>
                                             <StackPanel Orientation="Horizontal" Margin="0,5">
-                                                <TextBox Width="50" Margin="0,0,15,0" VerticalAlignment="Center"/>
+                                                <TextBox Width="50" Margin="0,0,15,0" VerticalAlignment="Center"
+                                                         Text="{Binding StartPrecison, UpdateSourceTrigger=PropertyChanged}"/>
                                                 <TextBlock TextWrapping="Wrap" Text="Начальная точность" Width="100"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="0,5">
-                                                <TextBox Width="50" Margin="0,0,15,0" VerticalAlignment="Center"/>
+                                                <TextBox Width="50" Margin="0,0,15,0" VerticalAlignment="Center"
+                                                         Text="{Binding EndPrecision, UpdateSourceTrigger=PropertyChanged}"/>
                                                 <TextBlock TextWrapping="Wrap" Text="Конечная точность" Width="100"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="0,5">
-                                                <TextBox Width="50" Margin="0,0,15,0" VerticalAlignment="Center"/>
+                                                <TextBox Width="50" Margin="0,0,15,0" VerticalAlignment="Center"
+                                                         Text="{Binding PrecisionStep, UpdateSourceTrigger=PropertyChanged}"/>
                                                 <TextBlock TextWrapping="Wrap" Text="Шаг изменения точности" Width="100"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal">
-                                                <Button Content="Расчитать" Width="80"/>
-                                                <Button Content="Очистить" Margin="10,0,0,0" Width="80"/>
+                                                <Button Content="Расчитать" Width="80" Command="{Binding PrecisionSearchCommand}"/>
+                                                <Button Content="Очистить" Margin="10,0,0,0" Width="80" Command="{Binding ClearPrecisionTableCommand}"/>
                                             </StackPanel>
                                             <DataGrid Margin="0,5" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
                                                   CanUserReorderColumns="False" CanUserSortColumns="False"
                                                   AlternatingRowBackground="Aquamarine" HorizontalGridLinesBrush="Black"
-                                                  VerticalGridLinesBrush="LightGray">
+                                                  VerticalGridLinesBrush="LightGray" ItemsSource="{Binding PrecisionSearches}">
                                                 <DataGrid.Columns>
-                                                    <DataGridTextColumn Header="Точность" Width="*"/>
-                                                    <DataGridTextColumn Header="Число итераций"/>
+                                                    <DataGridTextColumn Header="Точность" Width="*" Binding="{Binding Precision}"/>
+                                                    <DataGridTextColumn Header="Число итераций" Binding="{Binding NumberOfIterations}"/>
                                                 </DataGrid.Columns>
                                             </DataGrid>
                                         </StackPanel>
@@ -365,18 +368,18 @@
                                         <StackPanel>
                                             <TextBlock TextWrapping="Wrap" Text="В поле ниже введите коллекцию приближений, для которых вы хотите провести вычисления. Каждое новове приближение на новой строке, числа разделяются пробелами."/>
                                             <TextBox TextWrapping="Wrap" AcceptsReturn="True" Height="100" VerticalScrollBarVisibility="Auto"
-                                                 HorizontalScrollBarVisibility="Auto" Margin="0,5"/>
+                                                 HorizontalScrollBarVisibility="Auto" Margin="0,5" Text="{Binding Approximations, UpdateSourceTrigger=PropertyChanged}"/>
                                             <StackPanel Orientation="Horizontal">
-                                                <Button Content="Рассчитать" Width="80"/>
-                                                <Button Content="Очистить" Margin="10,0,0,0" Width="80"/>
+                                                <Button Content="Рассчитать" Width="80" Command="{Binding ApproximationSearchCommand}"/>
+                                                <Button Content="Очистить" Margin="10,0,0,0" Width="80" Command="{Binding ClearApproximationTableCommand}"/>
                                             </StackPanel>
                                             <DataGrid Margin="0,5" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
                                                   CanUserReorderColumns="False" CanUserSortColumns="False"
                                                   AlternatingRowBackground="BurlyWood" HorizontalGridLinesBrush="Black"
-                                                  VerticalGridLinesBrush="LightGray">
+                                                  VerticalGridLinesBrush="LightGray" ItemsSource="{Binding ApproximationSearches}">
                                                 <DataGrid.Columns>
-                                                    <DataGridTextColumn Header="Приближение" Width="*"/>
-                                                    <DataGridTextColumn Header="Число итераций"/>
+                                                    <DataGridTextColumn Header="Приближение" Width="*" Binding="{Binding Approximation}"/>
+                                                    <DataGridTextColumn Header="Число итераций" Binding="{Binding NumberOfIterations}"/>
                                                 </DataGrid.Columns>
                                             </DataGrid>
                                         </StackPanel>
@@ -385,16 +388,16 @@
                                         <StackPanel>
                                             <TextBlock TextWrapping="Wrap" Text="Для рассчета нажмите кнопку ниже. При рассчете используются данные из вклдки 'Решение СЛАУ'"/>
                                             <StackPanel Orientation="Horizontal" Margin="0,5">
-                                                <Button Content="Рассчитать" Width="80"/>
-                                                <Button Content="Очистить" Margin="10,0,0,0" Width="80"/>
+                                                <Button Content="Рассчитать" Width="80" Command="{Binding IterativeMethodSearchCommand}"/>
+                                                <Button Content="Очистить" Margin="10,0,0,0" Width="80" Command="{Binding ClearMethodTableCommand}"/>
                                             </StackPanel>
                                             <DataGrid Margin="0,5" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
                                                   CanUserReorderColumns="False" CanUserSortColumns="False"
                                                   AlternatingRowBackground="LavenderBlush" HorizontalGridLinesBrush="Black"
-                                                  VerticalGridLinesBrush="LightGray">
+                                                  VerticalGridLinesBrush="LightGray" ItemsSource="{Binding IterativeMethodSearches}">
                                                 <DataGrid.Columns>
-                                                    <DataGridTextColumn Header="Метод" Width="*"/>
-                                                    <DataGridTextColumn Header="Число итераций"/>
+                                                    <DataGridTextColumn Header="Метод" Width="*" Binding="{Binding IterativeMethodType}"/>
+                                                    <DataGridTextColumn Header="Число итераций" Binding="{Binding NumberOfIterations}"/>
                                                 </DataGrid.Columns>
                                             </DataGrid>
                                         </StackPanel>

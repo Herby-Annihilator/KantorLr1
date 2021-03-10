@@ -38,6 +38,12 @@ namespace KantorLr1.ViewModels
 			RestoreDataFromFileCommand = new LambdaCommand(OnRestoreDataFromFileCommandExecuted, CanRestoreDataFromFileCommandExecute);
 			GetSolutionCommand = new LambdaCommand(OnGetSolutionCommandExecuted, CanGetSolutionCommandExecute);
 			RadioButtonCommand = new LambdaCommand(OnRadioButtonCommandExecuted, CanRadioButtonCommandExecute);
+			PrecisionSearchCommand = new LambdaCommand(OnPrecisionSearchCommandExecuted, CanPrecisionSearchCommandExecute);
+			ClearApproximationTableCommand = new LambdaCommand(OnClearApproximationTableExecuted, CanClearApproximationTableCommandExecute);
+			ClearMethodTableCommand = new LambdaCommand(OnClearMethodTableCommandExecuted, CanClearMethodTableCommandExecute);
+			ClearPrecisionTableCommand = new LambdaCommand(OnClearPrecisionTableCommandExecuted, CanClearPrecisionTableCommandExecute);
+			ApproximationSearchCommand = new LambdaCommand(OnApproximationSearchCommandExecuted, CanApproximationSearchCommandExecute);
+			IterativeMethodSearchCommand = new LambdaCommand(OnIterativeMethodSearchCommandExecuted, CanIterativeMethodSearchCommandExecute);
 
 		}
 
@@ -336,7 +342,128 @@ namespace KantorLr1.ViewModels
 		}
 		private bool CanRadioButtonCommandExecute(object param) => true;
 		#endregion
+
+		#region SearchCommands
+		public ICommand PrecisionSearchCommand { get; }
+		private void OnPrecisionSearchCommandExecuted(object param)
+		{
+			try
+			{
+				double start = double.Parse(StartPrecison);
+				double end = double.Parse(EndPrecision);
+				double step = double.Parse(PrecisionStep);
+				double stepSum = Math.Abs(step);
+				double startPrecision;
+				double endPrecision;
+				IterativeAnswer answer;
+				PrecisionSearches.Clear();
+				if (end > start)
+				{
+					startPrecision = start;
+					endPrecision = end;
+				}
+				else
+				{
+					startPrecision = end;
+					endPrecision = start;
+				}
+				while (endPrecision - startPrecision < stepSum)
+				{
+					answer = reshala.SolveSystemOfLinearAlgebraicEquationsIteratively(matrix, vector,
+						approximation, endPrecision - stepSum, methodType);
+					PrecisionSearches.Add(new PrecisionSearch(answer.NumberOfIterations, endPrecision - stepSum));
+					stepSum += Math.Abs(step);
+				}
+			}
+			catch(Exception e)
+			{
+				Status = e.Message;
+			}
+		}
+		private bool CanPrecisionSearchCommandExecute(object param) =>
+			CheckFieldsForPrecisionSearch() && CanGetSolutionCommandExecute(param);
+		
+		public ICommand ApproximationSearchCommand { get; }
+		private void OnApproximationSearchCommandExecuted(object param)
+		{
+			try
+			{
+				string[] strs = Approximations.Split("\r\n", StringSplitOptions.RemoveEmptyEntries);
+				string[] numbers;
+				double[][] approximations = new double[strs.Length][];
+				ApproximationSearches.Clear();
+				for (int i = 0; i < strs.Length; i++)
+				{
+					numbers = strs[i].Split(" ", StringSplitOptions.RemoveEmptyEntries);
+					approximations[i] = new double[numbers.Length];
+					for (int j = 0; j < numbers.Length; j++)
+					{
+						approximations[i][j] = Convert.ToDouble(numbers[j]);
+					}
+				}
+				IterativeAnswer answer;
+				for (int i = 0; i < strs.Length; i++)
+				{
+					answer = reshala.SolveSystemOfLinearAlgebraicEquationsIteratively(matrix, vector,
+						approximations[i], precision, methodType);
+					ApproximationSearches.Add(new ApproximationSearch(answer.NumberOfIterations, approximations[i]));
+				}
+			}
+			catch(Exception e)
+			{
+				Status = e.Message;
+			}
+		}
+		private bool CanApproximationSearchCommandExecute(object param) => !string.IsNullOrWhiteSpace(Approximations);
+
+		public ICommand IterativeMethodSearchCommand { get; }
+		private void OnIterativeMethodSearchCommandExecuted(object param)
+		{
+			IterativeAnswer answer;
+			IterativeMethodSearches.Clear();
+			answer = reshala.SolveSystemOfLinearAlgebraicEquationsIteratively(matrix, vector,
+				approximation, precision, IterativeMethodType.Jacobi);
+			IterativeMethodSearches.Add(new IterativeMethodSearch(answer.NumberOfIterations, IterativeMethodType.Jacobi));
+			answer = reshala.SolveSystemOfLinearAlgebraicEquationsIteratively(matrix, vector,
+				approximation, precision, IterativeMethodType.Seidel);
+			IterativeMethodSearches.Add(new IterativeMethodSearch(answer.NumberOfIterations, IterativeMethodType.Seidel));
+		}
+		private bool CanIterativeMethodSearchCommandExecute(object param) => CanGetSolutionCommandExecute(param);
+		public ICommand ClearPrecisionTableCommand { get; }
+		private void OnClearPrecisionTableCommandExecuted(object param)
+		{
+			PrecisionSearches.Clear();
+		}
+		private bool CanClearPrecisionTableCommandExecute(object param) => true;
+
+		public ICommand ClearApproximationTableCommand { get; }
+		private void OnClearApproximationTableExecuted(object param)
+		{
+			ApproximationSearches.Clear();
+		}
+		private bool CanClearApproximationTableCommandExecute(object param) => true;
+
+		public ICommand ClearMethodTableCommand { get; }
+		private void OnClearMethodTableCommandExecuted(object param)
+		{
+			IterativeMethodSearches.Clear();
+		}
+		private bool CanClearMethodTableCommandExecute(object param) => true;
 		#endregion
+		#endregion
+
+		private bool CheckFieldsForPrecisionSearch()
+		{
+			if (!double.TryParse(StartPrecison, out double start))
+				return false;
+			if (!double.TryParse(EndPrecision, out double end))
+				return false;
+			if (!double.TryParse(PrecisionStep, out double step))
+				return false;
+			if (end < double.Epsilon || start < double.Epsilon)
+				return false;
+			return true;
+		}
 
 		private void ClearResultFields()
 		{
