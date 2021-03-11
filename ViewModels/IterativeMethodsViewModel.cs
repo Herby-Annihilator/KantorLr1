@@ -126,8 +126,8 @@ namespace KantorLr1.ViewModels
 		private string numberOfIterations;
 		public string NumberOfIterations { get => numberOfIterations; set => Set(ref numberOfIterations, value); }
 
-		private string diagonalDominanceCondition;
-		public string DiagonalDominanceCondition { get => diagonalDominanceCondition; set => Set(ref diagonalDominanceCondition, value); }
+		private bool diagonalDominanceCondition;
+		public bool DiagonalDominanceCondition { get => diagonalDominanceCondition; set => Set(ref diagonalDominanceCondition, value); }
 
 
 		#endregion
@@ -296,7 +296,7 @@ namespace KantorLr1.ViewModels
 			{
 				ClearResultFields();
 				precision = double.Parse(DesiredPrecision);
-				DiagonalDominanceCondition = reshala.IsTheConditionOfDiagonalDominanceSatisfied(matrix).ToString();
+				DiagonalDominanceCondition = reshala.IsTheConditionOfDiagonalDominanceSatisfied(matrix);
 				IterativeAnswer answer = reshala.SolveSystemOfLinearAlgebraicEquationsIteratively(
 					matrix, vector, approximation, precision, methodType);
 				SolutionStatus = answer.AnswerStatus.ToString();
@@ -500,7 +500,7 @@ namespace KantorLr1.ViewModels
 			MatrixANorm = "";
 			ProductOfMatrixNorms = "";
 			NumberOfIterations = "";
-			DiagonalDominanceCondition = "";
+			DiagonalDominanceCondition = false;
 		}
 
 		private void SetAccuracy(double[] answer)

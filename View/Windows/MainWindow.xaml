@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KantorLr1"
         xmlns:vm="clr-namespace:KantorLr1.ViewModels"
+        xmlns:converters="clr-namespace:KantorLr1.Infrastructure.Converters"
         xmlns:commands="clr-namespace:KantorLr1.Infrastructure.Commands"
         mc:Ignorable="d"
         DataContext="{Binding MainWindowViewModel, Source={StaticResource Locator}}"
@@ -319,7 +320,10 @@
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0, 10">
                                                     <TextBlock Text="Условие диагонального преобладания:"/>
-                                                    <TextBlock Margin="10, 0" Text="{Binding DiagonalDominanceCondition, UpdateSourceTrigger=PropertyChanged}"/>
+                                                    <TextBlock Margin="10, 0" 
+                                                               Text="{Binding DiagonalDominanceCondition, UpdateSourceTrigger=PropertyChanged, Converter={converters:DiagonalDominanceConditionConverter}}">
+                                                        
+                                                    </TextBlock>
                                                 </StackPanel>
                                             </StackPanel>
                                         </GroupBox>
