@@ -1,15 +1,14 @@
-﻿using System;
+﻿using KantorLr1.Infrastructure.Converters.Base;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using System.Windows.Data;
-using System.Windows.Markup;
 
 namespace KantorLr1.Infrastructure.Converters
 {
-	public class DiagonalDominanceConditionConverter : MarkupExtension, IValueConverter
+	public class DiagonalDominanceConditionConverter : Converter
 	{
-		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+		public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			if (!(value is bool)) return null;
 			if ((bool)value == true)
@@ -17,16 +16,6 @@ namespace KantorLr1.Infrastructure.Converters
 			else if ((bool)value == false)
 				return "Не выполнено";
 			return "";
-		}
-
-		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-		{
-			throw new NotSupportedException();
-		}
-
-		public override object ProvideValue(IServiceProvider serviceProvider)
-		{
-			return this;
 		}
 	}
 }
