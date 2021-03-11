@@ -7,6 +7,12 @@
     <Application.Resources>
         <ResourceDictionary>
             <vm:ViewModelLocator x:Key="Locator"/>
+
+            <Style TargetType="DataGrid" x:Key="ScrollTable">
+                <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+                <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
+
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

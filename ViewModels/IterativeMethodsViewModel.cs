@@ -9,6 +9,7 @@ using KantorLr1.Infrastructure.Commands;
 using KantorLr1.Model.IterativeSearching;
 using System.IO;
 using System.Windows.Markup;
+using KantorLr1.Model.Extensions;
 
 namespace KantorLr1.ViewModels
 {
@@ -84,7 +85,15 @@ namespace KantorLr1.ViewModels
 		public string VectorB { get => vectorB; set => Set(ref vectorB, value); }
 
 		private string desiredPrecision;
-		public string DesiredPrecision { get => desiredPrecision; set => Set(ref desiredPrecision, value); }
+		public string DesiredPrecision
+		{
+			get => desiredPrecision;
+			set
+			{
+				Set(ref desiredPrecision, value);
+				double.TryParse(desiredPrecision, out precision);
+			}
+		}
 
 		private string startApproximation;
 		public string StartApproximation { get => startApproximation; set => Set(ref startApproximation, value); }
@@ -287,6 +296,7 @@ namespace KantorLr1.ViewModels
 			{
 				ClearResultFields();
 				precision = double.Parse(DesiredPrecision);
+				DiagonalDominanceCondition = reshala.IsTheConditionOfDiagonalDominanceSatisfied(matrix).ToString();
 				IterativeAnswer answer = reshala.SolveSystemOfLinearAlgebraicEquationsIteratively(
 					matrix, vector, approximation, precision, methodType);
 				SolutionStatus = answer.AnswerStatus.ToString();
@@ -310,7 +320,6 @@ namespace KantorLr1.ViewModels
 					ReversedMatrix += "\r\n";
 				}
 				NumberOfIterations = answer.NumberOfIterations.ToString();
-				DiagonalDominanceCondition = answer.ConditionOfDiagonalDominance.ToString();
 				double firstNorm = reshala.GetMatrixMNorm(matrix);
 				double secondNorm = reshala.GetMatrixMNorm(reversedMatrix);
 				MatrixANorm = firstNorm.ToString();
@@ -367,7 +376,7 @@ namespace KantorLr1.ViewModels
 					startPrecision = end;
 					endPrecision = start;
 				}
-				while (endPrecision - startPrecision < stepSum)
+				while ((endPrecision - startPrecision) > stepSum)
 				{
 					answer = reshala.SolveSystemOfLinearAlgebraicEquationsIteratively(matrix, vector,
 						approximation, endPrecision - stepSum, methodType);
@@ -381,7 +390,10 @@ namespace KantorLr1.ViewModels
 			}
 		}
 		private bool CanPrecisionSearchCommandExecute(object param) =>
-			CheckFieldsForPrecisionSearch() && CanGetSolutionCommandExecute(param);
+			CheckFieldsForPrecisionSearch() && 
+			!(string.IsNullOrWhiteSpace(MatrixA) ||
+			string.IsNullOrWhiteSpace(VectorB) ||
+			string.IsNullOrWhiteSpace(StartApproximation));
 		
 		public ICommand ApproximationSearchCommand { get; }
 		private void OnApproximationSearchCommandExecuted(object param)
@@ -406,7 +418,7 @@ namespace KantorLr1.ViewModels
 				{
 					answer = reshala.SolveSystemOfLinearAlgebraicEquationsIteratively(matrix, vector,
 						approximations[i], precision, methodType);
-					ApproximationSearches.Add(new ApproximationSearch(answer.NumberOfIterations, approximations[i]));
+					ApproximationSearches.Add(new ApproximationSearch(answer.NumberOfIterations, approximations[i].GetEquivalentString()));
 				}
 			}
 			catch(Exception e)
@@ -421,12 +433,27 @@ namespace KantorLr1.ViewModels
 		{
 			IterativeAnswer answer;
 			IterativeMethodSearches.Clear();
-			answer = reshala.SolveSystemOfLinearAlgebraicEquationsIteratively(matrix, vector,
+			try
+			{
+				answer = reshala.SolveSystemOfLinearAlgebraicEquationsIteratively(matrix, vector,
 				approximation, precision, IterativeMethodType.Jacobi);
-			IterativeMethodSearches.Add(new IterativeMethodSearch(answer.NumberOfIterations, IterativeMethodType.Jacobi));
-			answer = reshala.SolveSystemOfLinearAlgebraicEquationsIteratively(matrix, vector,
+				IterativeMethodSearches.Add(new IterativeMethodSearch(answer.NumberOfIterations, IterativeMethodType.Jacobi));
+			}
+			catch(Exception e)
+			{
+				Status = "Метод Якоби не справился. Причина " + e.Message;
+			}
+			try
+			{
+				answer = reshala.SolveSystemOfLinearAlgebraicEquationsIteratively(matrix, vector,
 				approximation, precision, IterativeMethodType.Seidel);
-			IterativeMethodSearches.Add(new IterativeMethodSearch(answer.NumberOfIterations, IterativeMethodType.Seidel));
+				IterativeMethodSearches.Add(new IterativeMethodSearch(answer.NumberOfIterations,
+					IterativeMethodType.Seidel));
+			}
+			catch(Exception e)
+			{
+				Status = "Метод Зейделя не справился. Причина " + e.Message;
+			}
 		}
 		private bool CanIterativeMethodSearchCommandExecute(object param) => CanGetSolutionCommandExecute(param);
 		public ICommand ClearPrecisionTableCommand { get; }
