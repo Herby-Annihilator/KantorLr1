@@ -416,6 +416,10 @@
                                                     </StackPanel>
                                                    
                                                 </StackPanel>
+                                                <WrapPanel DockPanel.Dock="Bottom">
+                                                    <Button Content="Найти примеры" Command="{Binding GetExamplesCommand}"/>
+                                                    <TextBlock Margin="7,0" TextWrapping="Wrap" Text="{Binding SearchStatus}"/>
+                                                </WrapPanel>
                                                 <DataGrid Margin="0,5" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
                                                   CanUserReorderColumns="False" CanUserSortColumns="False"
                                                   AlternatingRowBackground="LavenderBlush" HorizontalGridLinesBrush="Black"
@@ -426,6 +430,7 @@
                                                         <DataGridTextColumn Header="Число итераций" Binding="{Binding NumberOfIterations}"/>
                                                     </DataGrid.Columns>
                                                 </DataGrid>
+                                                
                                             </DockPanel>
                                         </GroupBox>
                                     </Grid>

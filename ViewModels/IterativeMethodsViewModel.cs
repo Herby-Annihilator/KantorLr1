@@ -10,6 +10,8 @@ using KantorLr1.Model.IterativeSearching;
 using System.IO;
 using System.Windows.Markup;
 using KantorLr1.Model.Extensions;
+using System.Threading.Tasks;
+using System.Timers;
 
 namespace KantorLr1.ViewModels
 {
@@ -21,6 +23,8 @@ namespace KantorLr1.ViewModels
 		private const string APPROXIMATION_FILE = "approx.dat";
 		private IterativeMethodType methodType;
 		private double precision;
+		private bool isExamplesSearching = false;
+		private int searchTimeInMinutes = 10;
 
 		public IterativeMethodsViewModel()
 		{
@@ -45,6 +49,7 @@ namespace KantorLr1.ViewModels
 			ClearPrecisionTableCommand = new LambdaCommand(OnClearPrecisionTableCommandExecuted, CanClearPrecisionTableCommandExecute);
 			ApproximationSearchCommand = new LambdaCommand(OnApproximationSearchCommandExecuted, CanApproximationSearchCommandExecute);
 			IterativeMethodSearchCommand = new LambdaCommand(OnIterativeMethodSearchCommandExecuted, CanIterativeMethodSearchCommandExecute);
+			GetExamplesCommand = new LambdaCommand(OnGetExamplesCommandExecuted, CanGetExamplesCommandExecute);
 
 		}
 
@@ -126,10 +131,15 @@ namespace KantorLr1.ViewModels
 		private string numberOfIterations;
 		public string NumberOfIterations { get => numberOfIterations; set => Set(ref numberOfIterations, value); }
 
-		private bool diagonalDominanceCondition;
-		public bool DiagonalDominanceCondition { get => diagonalDominanceCondition; set => Set(ref diagonalDominanceCondition, value); }
+		private bool? diagonalDominanceCondition;
+		public bool? DiagonalDominanceCondition { get => diagonalDominanceCondition; set => Set(ref diagonalDominanceCondition, value); }
 
 
+		#endregion
+
+		#region SearchExamples
+		private string searchStatus;
+		public string SearchStatus { get => searchStatus; set => Set(ref searchStatus, value); }
 		#endregion
 
 		#endregion
@@ -476,6 +486,14 @@ namespace KantorLr1.ViewModels
 			IterativeMethodSearches.Clear();
 		}
 		private bool CanClearMethodTableCommandExecute(object param) => true;
+
+		public ICommand GetExamplesCommand { get; }
+		private void OnGetExamplesCommandExecuted(object param)
+		{
+			searchTimeInMinutes = 10;
+			BeginToFindExamples();
+		}
+		private bool CanGetExamplesCommandExecute(object param) => !isExamplesSearching;
 		#endregion
 		#endregion
 
@@ -500,7 +518,7 @@ namespace KantorLr1.ViewModels
 			MatrixANorm = "";
 			ProductOfMatrixNorms = "";
 			NumberOfIterations = "";
-			DiagonalDominanceCondition = false;
+			DiagonalDominanceCondition = null;
 		}
 
 		private void SetAccuracy(double[] answer)
@@ -582,6 +600,98 @@ namespace KantorLr1.ViewModels
 		private void DestroyApproximation()
 		{
 			approximation = null;
+		}
+
+		private async void BeginToFindExamples()
+		{
+			Timer timer = new Timer
+			{
+				Interval = 60000  // 1 min
+			};
+			timer.Elapsed += Timer_Elapsed;
+			timer.Start();
+			isExamplesSearching = true;
+			await Task.Run(TryToFindExamples);
+			isExamplesSearching = false;
+			SearchStatus = "Поиск завершен. Ищете файл Examples.txt";
+			timer.Stop();
+		}
+
+		private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+		{
+			searchTimeInMinutes--;
+			SearchStatus = "Выполняю, времени осталось: " + searchTimeInMinutes + " мин";
+		}
+
+		private void TryToFindExamples()
+		{
+			DateTime time = DateTime.Now;
+			int minutesToWork = 10;
+			int resultCount = 0;
+			int necessaryResultCount = 5;
+			CMReshala localReshala = new CMReshala();
+			int localMatrixSize;
+			double[][] workingMatrix;
+			double[] localVector;
+			double[] localApproximation;
+			double localPrecision;
+			Random localRandom = new Random();
+			IterativeAnswer answer;
+			string fileForExamples = "Examples.txt";
+			while(DateTime.Now.Subtract(time).TotalMinutes < minutesToWork && resultCount < necessaryResultCount)
+			{
+				localMatrixSize = localRandom.Next(5, 16);
+				workingMatrix = localReshala.CreateMatrixWithoutDiagonalDominance(localMatrixSize, -50, 50);
+				localVector = localReshala.CreateRandomVector(localMatrixSize, -50, 50);
+				localApproximation = CreateRandomApproximation(localMatrixSize, 0, 10);
+				localPrecision = localRandom.NextDouble();
+				try
+				{
+					answer = localReshala.SolveSystemOfLinearAlgebraicEquationsIteratively(workingMatrix, localVector,
+					localApproximation, localPrecision);
+					WriteExampleToFile(fileForExamples, workingMatrix, localVector, localApproximation,
+						localPrecision, localReshala.CalculateDiagonalDominance(workingMatrix), answer.Solution[0]);
+					resultCount++;
+				}
+				catch (Exception)
+				{
+
+				}				
+			}
+		}
+		private double[] CreateRandomApproximation(int size, int min, int max)
+		{
+			Random random = new Random();
+			double[] vector = new double[size];
+			for (int i = 0; i < size; i++)
+			{
+				vector[i] = random.Next(min, max);
+			}
+			return vector;
+		}
+
+		private void WriteExampleToFile(string fileName, double[][] matr, double[] vect, double[] app,
+			double prec, double dominantValue, double[] solution)
+		{
+			StreamWriter writer = new StreamWriter(fileName, true);
+			writer.WriteLine("Пример" + "\r\n");
+			writer.WriteLine("Матрица" + new string('\t', matr.GetLength(0)) + "Вектор" + "\t" + "Приближение" + "\r\n");
+			for (int i = 0; i < matr.GetLength(0); i++)
+			{
+
+				writer.Write(matr[i].GetEquivalentString() + new string('\t', matr.GetLength(0)) + vect[i] +
+					"\t" + app[i]);
+				writer.WriteLine();
+			}
+			writer.WriteLine("\r\n" + "Точность " + prec + "\r\nЗначение диагонального преобладания " + dominantValue + "\r\n");
+			writer.WriteLine("Решение:");
+			for (int i = 0; i < solution.Length; i++)
+			{
+				writer.Write(solution[i] + " ");
+			}
+			writer.WriteLine();
+			writer.WriteLine("\r\n\r\n");
+			writer.Close();
 		}
 	}
 }
