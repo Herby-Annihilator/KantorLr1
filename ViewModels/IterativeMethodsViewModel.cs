@@ -611,6 +611,7 @@ namespace KantorLr1.ViewModels
 			timer.Elapsed += Timer_Elapsed;
 			timer.Start();
 			isExamplesSearching = true;
+			SearchStatus = "Выполняю, времени осталось: " + searchTimeInMinutes + " мин";
 			await Task.Run(TryToFindExamples);
 			isExamplesSearching = false;
 			SearchStatus = "Поиск завершен. Ищете файл Examples.txt";
@@ -643,7 +644,7 @@ namespace KantorLr1.ViewModels
 				localMatrixSize = localRandom.Next(5, 16);
 				workingMatrix = localReshala.CreateMatrixWithoutDiagonalDominance(localMatrixSize, -50, 50);
 				localVector = localReshala.CreateRandomVector(localMatrixSize, -50, 50);
-				localApproximation = CreateRandomApproximation(localMatrixSize, 0, 10);
+				localApproximation = localReshala.CreateRandomVector(localMatrixSize, 0, 10);
 				localPrecision = localRandom.NextDouble();
 				try
 				{
@@ -658,16 +659,6 @@ namespace KantorLr1.ViewModels
 
 				}				
 			}
-		}
-		private double[] CreateRandomApproximation(int size, int min, int max)
-		{
-			Random random = new Random();
-			double[] vector = new double[size];
-			for (int i = 0; i < size; i++)
-			{
-				vector[i] = random.Next(min, max);
-			}
-			return vector;
 		}
 
 		private void WriteExampleToFile(string fileName, double[][] matr, double[] vect, double[] app,
