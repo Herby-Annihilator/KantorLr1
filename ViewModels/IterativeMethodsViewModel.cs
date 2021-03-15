@@ -5,6 +5,8 @@ using System.Text;
 using System.Windows.Input;
 using CompMathLibrary;
 using CompMathLibrary.Methods;
+using CompMathLibrary.Creators.MethodCreators.Base;
+using CompMathLibrary.Creators.MethodCreators;
 using KantorLr1.Infrastructure.Commands;
 using KantorLr1.Model.IterativeSearching;
 using System.IO;
@@ -21,7 +23,7 @@ namespace KantorLr1.ViewModels
 		private double[] approximation;
 		private const string FILE_TO_SAVE_DATA = "input2.dat";
 		private const string APPROXIMATION_FILE = "approx.dat";
-		private IterativeMethodType methodType;
+		private IterativeMethodsCreator creator;
 		private double precision;
 		private bool isExamplesSearching = false;
 		private int searchTimeInMinutes = 10;
@@ -29,7 +31,7 @@ namespace KantorLr1.ViewModels
 		public IterativeMethodsViewModel()
 		{
 			reshala = new CMReshala();
-			methodType = IterativeMethodType.Jacobi;
+			creator = new JacobiMethodCreator();
 			matrix = null;
 			vector = null;
 			approximation = null;
@@ -308,7 +310,7 @@ namespace KantorLr1.ViewModels
 				precision = double.Parse(DesiredPrecision);
 				DiagonalDominanceCondition = reshala.IsTheConditionOfDiagonalDominanceSatisfied(matrix);
 				IterativeAnswer answer = reshala.SolveSystemOfLinearAlgebraicEquationsIteratively(
-					matrix, vector, approximation, precision, methodType);
+					matrix, vector, approximation, precision, creator);
 				SolutionStatus = answer.AnswerStatus.ToString();
 				SetAccuracy(answer.Solution[0]);
 				for (int i = 0; i < answer.Solution[0].Length; i++)
@@ -320,7 +322,7 @@ namespace KantorLr1.ViewModels
 				{
 					Residuals += "String " + i + " has residual: " + Math.Round(resids[i], 5) + "\r\n";
 				}
-				double[][] reversedMatrix = reshala.GetReversedMatrix(matrix);
+				double[][] reversedMatrix = reshala.GetReversedMatrix(matrix, new GaussMethodCreator());
 				for (int i = 0; i < reversedMatrix.GetLength(0); i++)
 				{
 					for (int j = 0; j < reversedMatrix[i].Length; j++)
@@ -352,11 +354,11 @@ namespace KantorLr1.ViewModels
 		{
 			if ((string)param == "Jacobi")
 			{
-				methodType = IterativeMethodType.Jacobi;
+				creator = new JacobiMethodCreator();
 			}
 			if ((string)param == "Seidel")
 			{
-				methodType = IterativeMethodType.Seidel;
+				creator = new SeidelMethodCreator();
 			}
 		}
 		private bool CanRadioButtonCommandExecute(object param) => true;
@@ -389,7 +391,7 @@ namespace KantorLr1.ViewModels
 				while ((endPrecision - startPrecision) > stepSum)
 				{
 					answer = reshala.SolveSystemOfLinearAlgebraicEquationsIteratively(matrix, vector,
-						approximation, endPrecision - stepSum, methodType);
+						approximation, endPrecision - stepSum, creator);
 					PrecisionSearches.Add(new PrecisionSearch(answer.NumberOfIterations, endPrecision - stepSum));
 					stepSum += Math.Abs(step);
 				}
@@ -427,7 +429,7 @@ namespace KantorLr1.ViewModels
 				for (int i = 0; i < strs.Length; i++)
 				{
 					answer = reshala.SolveSystemOfLinearAlgebraicEquationsIteratively(matrix, vector,
-						approximations[i], precision, methodType);
+						approximations[i], precision, creator);
 					ApproximationSearches.Add(new ApproximationSearch(answer.NumberOfIterations, approximations[i].GetEquivalentString()));
 				}
 			}
@@ -446,8 +448,8 @@ namespace KantorLr1.ViewModels
 			try
 			{
 				answer = reshala.SolveSystemOfLinearAlgebraicEquationsIteratively(matrix, vector,
-				approximation, precision, IterativeMethodType.Jacobi);
-				IterativeMethodSearches.Add(new IterativeMethodSearch(answer.NumberOfIterations, IterativeMethodType.Jacobi));
+				approximation, precision, new JacobiMethodCreator());
+				IterativeMethodSearches.Add(new IterativeMethodSearch(answer.NumberOfIterations, new JacobiMethodCreator()));
 			}
 			catch(Exception e)
 			{
@@ -456,9 +458,9 @@ namespace KantorLr1.ViewModels
 			try
 			{
 				answer = reshala.SolveSystemOfLinearAlgebraicEquationsIteratively(matrix, vector,
-				approximation, precision, IterativeMethodType.Seidel);
+				approximation, precision, new SeidelMethodCreator());
 				IterativeMethodSearches.Add(new IterativeMethodSearch(answer.NumberOfIterations,
-					IterativeMethodType.Seidel));
+					new SeidelMethodCreator()));
 			}
 			catch(Exception e)
 			{
@@ -649,7 +651,7 @@ namespace KantorLr1.ViewModels
 				try
 				{
 					answer = localReshala.SolveSystemOfLinearAlgebraicEquationsIteratively(workingMatrix, localVector,
-					localApproximation, localPrecision);
+					localApproximation, localPrecision, creator);
 					WriteExampleToFile(fileForExamples, workingMatrix, localVector, localApproximation,
 						localPrecision, localReshala.CalculateDiagonalDominance(workingMatrix), answer.Solution[0]);
 					resultCount++;

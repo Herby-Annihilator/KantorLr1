@@ -6,6 +6,8 @@ using System.IO;
 using KantorLr1.Infrastructure.Commands;
 using CompMathLibrary;
 using CompMathLibrary.Methods;
+using CompMathLibrary.Creators.MethodCreators.Base;
+using CompMathLibrary.Creators.MethodCreators;
 using KantorLr1.Model;
 using System.Collections.ObjectModel;
 using System.Windows.Markup;
@@ -15,10 +17,10 @@ namespace KantorLr1.ViewModels
 	[MarkupExtensionReturnType(typeof(MainWindowViewModel))]
 	public class MainWindowViewModel : ContentControlViewModel
 	{
-		private DirectMethodType methodType;
+		private DirectMethodsCreator creator;
 		public MainWindowViewModel()
 		{
-			methodType = DirectMethodType.Gauss;
+			creator = new GaussMethodCreator();
 			matrix = null;
 			vector = null;
 			reshala = new CMReshala();
@@ -203,7 +205,7 @@ namespace KantorLr1.ViewModels
 			{
 				ClearResultsFields();
 				Answer answer = reshala.SolveSystemOfLinearAlgebraicEquations(matrix, vector,
-					methodType);
+					creator);
 				SolutionStatus = answer.AnswerStatus.ToString();
 				if (answer.AnswerStatus == AnswerStatus.OneSolution)
 				{
@@ -213,7 +215,7 @@ namespace KantorLr1.ViewModels
 						{
 							Solution += Math.Round(answer.Solution[0][i], 5) + "\r\n";
 						}
-						double[][] reversedMatrix = reshala.GetReversedMatrix(matrix, methodType);
+						double[][] reversedMatrix = reshala.GetReversedMatrix(matrix, creator);
 						for (int i = 0; i < reversedMatrix.GetLength(0); i++)
 						{
 							for (int j = 0; j < reversedMatrix[i].GetLength(0); j++)
@@ -252,11 +254,11 @@ namespace KantorLr1.ViewModels
 		{
 			if ((string)param == "Gauss")
 			{
-				methodType = DirectMethodType.Gauss;
+				creator = new GaussMethodCreator();
 			}
 			else if ((string)param == "SquareRoot")
 			{
-				methodType = DirectMethodType.SquareRoot;
+				creator = new SquareRootMethodCreator();
 			}
 		}
 		private bool CanRadioButtonCommandExecute(object param)
@@ -272,8 +274,8 @@ namespace KantorLr1.ViewModels
 				Differences = "";
 				GaussSolution = "";
 				SquareRootSolution = "";
-				Answer gauss = reshala.SolveSystemOfLinearAlgebraicEquations(matrix, vector, DirectMethodType.Gauss);
-				Answer square = reshala.SolveSystemOfLinearAlgebraicEquations(matrix, vector, DirectMethodType.SquareRoot);
+				Answer gauss = reshala.SolveSystemOfLinearAlgebraicEquations(matrix, vector, creator);
+				Answer square = reshala.SolveSystemOfLinearAlgebraicEquations(matrix, vector, creator);
 				for (int i = 0; i < gauss.Solution[0].Length; i++)
 				{
 					GaussSolution += "x" + (i + 1) + " =  " + gauss.Solution[0][i] + "\r\n";
@@ -305,7 +307,7 @@ namespace KantorLr1.ViewModels
 				{
 					gilbertMatrix = reshala.CreateGilbertMatrix(k);
 					conditionNumber = reshala.GetMatrixMNorm(gilbertMatrix);
-					gilbertMatrix = reshala.GetReversedMatrix(gilbertMatrix);
+					gilbertMatrix = reshala.GetReversedMatrix(gilbertMatrix, creator);
 					conditionNumber *= reshala.GetMatrixMNorm(gilbertMatrix);
 					Dependences.Add(new Dependence(k, conditionNumber));
 				}

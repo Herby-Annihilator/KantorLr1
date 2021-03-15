@@ -426,7 +426,7 @@
                                                   VerticalGridLinesBrush="LightGray" ItemsSource="{Binding IterativeMethodSearches}"
                                                           Style="{StaticResource ScrollTable}">
                                                     <DataGrid.Columns>
-                                                        <DataGridTextColumn Header="Метод" Width="*" Binding="{Binding IterativeMethodType}"/>
+                                                        <DataGridTextColumn Header="Метод" Width="*" Binding="{Binding IterativeMethodCreator}"/>
                                                         <DataGridTextColumn Header="Число итераций" Binding="{Binding NumberOfIterations}"/>
                                                     </DataGrid.Columns>
                                                 </DataGrid>
