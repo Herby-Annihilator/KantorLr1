@@ -15,5 +15,14 @@ namespace KantorLr1.Model.Extensions
 			}
 			return toReturn;
 		}
+		public static T[] Map<T>(this T[] arr, Func<T, T> func)
+		{
+			T[] toReturn = new T[arr.Length];
+			for (int i = 0; i < arr.Length; i++)
+			{
+				toReturn[i] = func(arr[i]);
+			}
+			return toReturn;
+		}
 	}
 }

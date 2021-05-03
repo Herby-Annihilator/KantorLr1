@@ -445,7 +445,7 @@
                 <TabItem.Content>
                     <DockPanel>
                         <StatusBar DockPanel.Dock="Bottom">
-                            <StatusBarItem Content="Default"/>
+                            <StatusBarItem Content="{Binding Status}"/>
                         </StatusBar>
                         <Grid>
                             <Grid.RowDefinitions>
@@ -475,42 +475,43 @@
                                 <DockPanel>
                                     <StackPanel Width="400" MinHeight="70" Margin="5">
                                         <TextBlock TextWrapping="Wrap" Text="Поле ниже предназначено для ввода матрицы. Для разделения чисел используйте пробел."/>
-                                        <TextBox TextWrapping="Wrap" AcceptsReturn="True" Height="100" Margin="0,5"/>
+                                        <TextBox TextWrapping="Wrap" AcceptsReturn="True" Height="100" Margin="0,5"
+                                                 Text="{Binding TextMatrix, UpdateSourceTrigger=PropertyChanged}"/>
                                         <Button Content="Сохранить матрицу" Command="{Binding SaveMatrixCommand}"/>
                                     </StackPanel>
                                     <StackPanel Width="300" MinHeight="70" Margin="5">
                                         <TextBlock TextWrapping="Wrap" Text="Поле ниже предназначено для ввода начального вектора. Для разделения чисел используйте пробел."/>
-                                        <TextBox  Margin="0,5"/>
+                                        <TextBox  Margin="0,5" Text="{Binding TextVector, UpdateSourceTrigger=PropertyChanged}"/>
                                         <Button Content="Сохранить вектор" Command="{Binding SaveVectorCommand}"/>
                                     </StackPanel>
                                     <StackPanel MinWidth="70" Margin="5">
                                         <WrapPanel Orientation="Horizontal"  Margin="0,0,0,5">
                                             <TextBlock Text="Точность"/>
-                                            <TextBox Width="55" Margin="5,0"/>
+                                            <TextBox Width="75" Margin="5,0" Text="{Binding TextPrecision, UpdateSourceTrigger=PropertyChanged}"/>
                                         </WrapPanel>
                                         <WrapPanel Orientation="Horizontal">
                                             <TextBlock Text="Число λ0"/>
-                                            <TextBox Width="55" Margin="5,0"/>
+                                            <TextBox Width="75" Margin="5,0" Text="{Binding StartLambda, UpdateSourceTrigger=PropertyChanged}"/>
                                         </WrapPanel>
                                         <Button Content="Восстановить данные" Margin="0,45" Command="{Binding RestoreDataFromFileCommand}"/>
                                     </StackPanel>
                                 </DockPanel>
                             </GroupBox>
                             <DockPanel Grid.Row="2" Margin="5">
-                                <StackPanel Width="400" Orientation="Horizontal" VerticalAlignment="Center">
+                                <StackPanel Width="400" Orientation="Horizontal" VerticalAlignment="Bottom" Margin="0,5">
                                     <TextBlock TextWrapping="Wrap" Text="Наибольшее по модулю собственное число матрицы"/>
-                                    <TextBox Margin="5,0" Width="70"/>
+                                    <TextBox Margin="5,0" Width="80" IsReadOnly="True" Text="{Binding LargestEigenvalueABS}"/>
                                 </StackPanel>
-                                <StackPanel Width="300" Margin="5,0">
+                                <StackPanel Width="350" Margin="5,0" VerticalAlignment="Bottom">
                                     <TextBlock Text="Соответсвующий собственный вектор"/>
-                                    <TextBox Margin="0,5"/>
+                                    <TextBox Margin="0,5" IsReadOnly="True" Text="{Binding EigenVector}"/>
                                 </StackPanel>
                                 <Button Content="Найти" HorizontalAlignment="Right" VerticalAlignment="Center" Width="100"
                                         Command="{Binding FindLargestEigenvalueABSAndEigenvectorCommand}"/>
                             </DockPanel>
                             <StackPanel Orientation="Horizontal" Grid.Row="4" VerticalAlignment="Center" Margin="5">
                                 <TextBlock Text="Собственное число, ближайшее к заданному λ0"/>
-                                <TextBox Width="100" Margin="5,0"/>
+                                <TextBox Width="100" Margin="5,0" Text="{Binding ClosestEigenvalue}" IsReadOnly="True"/>
                             </StackPanel>
                             <Button Grid.Row="4" Content="Найти" VerticalAlignment="Center" Width="100" HorizontalAlignment="Right"
                                     Command="{Binding FindEigenvalueClosestToAGivenOneCommand}"/>

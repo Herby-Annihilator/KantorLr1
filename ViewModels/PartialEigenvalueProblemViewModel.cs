@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using CompMathLibrary;
+using KantorLr1.Model.Extensions;
+using CompMathLibrary.Creators.MethodCreators;
 
 namespace KantorLr1.ViewModels
 {
@@ -43,6 +45,9 @@ namespace KantorLr1.ViewModels
 
 
 		#region Properties
+		private string _startLambda;
+		public string StartLambda { get => _startLambda; set => Set(ref _startLambda, value); }
+
 		private string _textMatrix;
 		public string TextMatrix { get => _textMatrix; set => Set(ref _textMatrix, value); }
 
@@ -72,6 +77,12 @@ namespace KantorLr1.ViewModels
 
 		private string _countOfIterations;
 		public string CountOfIterations { get => _countOfIterations; set => Set(ref _countOfIterations, value); }
+
+		private string _eigenVector;
+		public string EigenVector { get => _eigenVector; set => Set(ref _eigenVector, value); }
+
+		private string _closestEigenvalue;
+		public string ClosestEigenvalue { get => _closestEigenvalue; set => Set(ref _closestEigenvalue, value); }
 		#endregion
 
 
@@ -185,21 +196,46 @@ namespace KantorLr1.ViewModels
 		public ICommand FindLargestEigenvalueABSAndEigenvectorCommand { get; }
 		private void OnFindLargestEigenvalueABSAndEigenvectorCommandExecuted(object p)
 		{
-
+			try
+			{
+				LargestEigenvalueABS = "";
+				EigenVector = "";
+				double precision = Convert.ToDouble(TextPrecision);
+				var answer = _reshala.FindLargestEigenvalueAbsAndEigenvector(_matrix, _vector, precision);
+				LargestEigenvalueABS = answer.Eigenvalue.ToString();
+				EigenVector = answer.Eigenvector.Map((elem) => Math.Round(elem, 5)).GetEquivalentString();
+				Status = $"Число итераций = {answer.IterationsCount}";
+			}
+			catch(Exception e)
+			{
+				Status = $"Operation failed. Reason: {e.Message}";
+			}
 		}
 		private bool CanFindLargestEigenvalueABSAndEigenvectorCommandExecute(object p)
 		{
-			return true;
+			return !(string.IsNullOrWhiteSpace(TextMatrix) || string.IsNullOrWhiteSpace(TextPrecision) || string.IsNullOrWhiteSpace(TextVector));
 		}
 
 		public ICommand FindEigenvalueClosestToAGivenOneCommand { get; }
 		private void OnFindEigenvalueClosestToAGivenOneCommandExecuted(object p)
 		{
-
+			try
+			{
+				ClosestEigenvalue = "";
+				double startLambda = Convert.ToDouble(StartLambda);
+				double precision = Convert.ToDouble(TextPrecision);
+				var answer = _reshala.FindClosestEigenvalueToAGivenOne(_matrix, _vector, precision, startLambda);
+				ClosestEigenvalue = answer.Eigenvalue.ToString();
+				Status = answer.IterationsCount.ToString();
+			}
+			catch(Exception e)
+			{
+				Status = $"Operation failed. Reason: {e.Message}";
+			}
 		}
 		private bool CanFindEigenvalueClosestToAGivenOneCommandExecute(object p)
 		{
-			return true;
+			return !(string.IsNullOrWhiteSpace(TextMatrix) || string.IsNullOrWhiteSpace(TextPrecision) || string.IsNullOrWhiteSpace(TextVector) || string.IsNullOrWhiteSpace(StartLambda));
 		}
 
 		public ICommand FindSmallestEigenvalueAbsComand { get; }
