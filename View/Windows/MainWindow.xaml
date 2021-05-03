@@ -9,7 +9,7 @@
         xmlns:commands="clr-namespace:KantorLr1.Infrastructure.Commands"
         mc:Ignorable="d"
         DataContext="{Binding MainWindowViewModel, Source={StaticResource Locator}}"
-        Title="{Binding Path=Title}" Height="517" Width="889">
+        Title="{Binding Path=Title}" Height="527" Width="889">
     <!--<Window.DataContext>
         <vm:MainWindowViewModel/>
     </Window.DataContext>-->
@@ -439,6 +439,101 @@
                             </TabItem.Content>
                         </TabItem>
                     </TabControl>
+                </TabItem.Content>
+            </TabItem>
+            <TabItem Header="Частичная проблема собственных чисел" DataContext="{Binding PartialEigenvalueProblemViewModel, Source={StaticResource Locator}}">
+                <TabItem.Content>
+                    <DockPanel>
+                        <StatusBar DockPanel.Dock="Bottom">
+                            <StatusBarItem Content="Default"/>
+                        </StatusBar>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="3*" MinHeight="200"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.Resources>
+                                <Style TargetType="GridSplitter">
+                                    <Setter Property="Height" Value="3"/>
+                                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="Background" Value="AntiqueWhite"/>
+                                </Style>
+                            </Grid.Resources>
+                            <GridSplitter Grid.Row="1"/>
+                            <GridSplitter Grid.Row="3"/>
+                            <GridSplitter Grid.Row="5"/>
+                            <GridSplitter Grid.Row="7"/>
+                            <GroupBox Header="Ввод данных" Grid.Row="0">
+                                <DockPanel>
+                                    <StackPanel Width="400" MinHeight="70" Margin="5">
+                                        <TextBlock TextWrapping="Wrap" Text="Поле ниже предназначено для ввода матрицы. Для разделения чисел используйте пробел."/>
+                                        <TextBox TextWrapping="Wrap" AcceptsReturn="True" Height="100" Margin="0,5"/>
+                                        <Button Content="Сохранить матрицу" Command="{Binding SaveMatrixCommand}"/>
+                                    </StackPanel>
+                                    <StackPanel Width="300" MinHeight="70" Margin="5">
+                                        <TextBlock TextWrapping="Wrap" Text="Поле ниже предназначено для ввода начального вектора. Для разделения чисел используйте пробел."/>
+                                        <TextBox  Margin="0,5"/>
+                                        <Button Content="Сохранить вектор" Command="{Binding SaveVectorCommand}"/>
+                                    </StackPanel>
+                                    <StackPanel MinWidth="70" Margin="5">
+                                        <WrapPanel Orientation="Horizontal"  Margin="0,0,0,5">
+                                            <TextBlock Text="Точность"/>
+                                            <TextBox Width="55" Margin="5,0"/>
+                                        </WrapPanel>
+                                        <WrapPanel Orientation="Horizontal">
+                                            <TextBlock Text="Число λ0"/>
+                                            <TextBox Width="55" Margin="5,0"/>
+                                        </WrapPanel>
+                                        <Button Content="Восстановить данные" Margin="0,45" Command="{Binding RestoreDataFromFileCommand}"/>
+                                    </StackPanel>
+                                </DockPanel>
+                            </GroupBox>
+                            <DockPanel Grid.Row="2" Margin="5">
+                                <StackPanel Width="400" Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBlock TextWrapping="Wrap" Text="Наибольшее по модулю собственное число матрицы"/>
+                                    <TextBox Margin="5,0" Width="70"/>
+                                </StackPanel>
+                                <StackPanel Width="300" Margin="5,0">
+                                    <TextBlock Text="Соответсвующий собственный вектор"/>
+                                    <TextBox Margin="0,5"/>
+                                </StackPanel>
+                                <Button Content="Найти" HorizontalAlignment="Right" VerticalAlignment="Center" Width="100"
+                                        Command="{Binding FindLargestEigenvalueABSAndEigenvectorCommand}"/>
+                            </DockPanel>
+                            <StackPanel Orientation="Horizontal" Grid.Row="4" VerticalAlignment="Center" Margin="5">
+                                <TextBlock Text="Собственное число, ближайшее к заданному λ0"/>
+                                <TextBox Width="100" Margin="5,0"/>
+                            </StackPanel>
+                            <Button Grid.Row="4" Content="Найти" VerticalAlignment="Center" Width="100" HorizontalAlignment="Right"
+                                    Command="{Binding FindEigenvalueClosestToAGivenOneCommand}"/>
+                            <StackPanel Grid.Row="6" Margin="5">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Наибольшее собственное число матрицы"/>
+                                    <TextBox Width="100" Margin="5,0"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,5">
+                                    <TextBlock Text="Наименьшее собственное число матрицы"/>
+                                    <TextBox Width="100" Margin="5,0"/>
+                                </StackPanel>
+                            </StackPanel>
+                            <Button Grid.Row="6" Content="Найти" VerticalAlignment="Center" Width="100" HorizontalAlignment="Right"
+                                    Command="{Binding FindLargestAndSmallestEigenvaluesCommand}"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="8" VerticalAlignment="Center" Margin="5">
+                                <TextBlock Text="Наименьшее по модулю собственное число"/>
+                                <TextBox Width="100" Margin="5,0"/>
+                            </StackPanel>
+                            <Button Grid.Row="8" Content="Найти" VerticalAlignment="Center" Width="100" HorizontalAlignment="Right"
+                                    Command="{Binding FindSmallestEigenvalueAbsComand}"/>
+                        </Grid>
+                    </DockPanel>
                 </TabItem.Content>
             </TabItem>
         </TabControl>
