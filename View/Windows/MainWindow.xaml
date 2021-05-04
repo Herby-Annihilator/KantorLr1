@@ -537,6 +537,86 @@
                     </DockPanel>
                 </TabItem.Content>
             </TabItem>
+            <TabItem Header="Полная проблема собственных чисел">
+                <TabItem.Resources>
+                    <Style TargetType="DataGrid">
+                        <Setter Property="AutoGenerateColumns" Value="False"/>
+                        <Setter Property="CanUserAddRows" Value="False"/>
+                        <Setter Property="CanUserDeleteRows" Value="False"/>
+                        <Setter Property="CanUserSortColumns" Value="False"/>
+                        <Setter Property="AlternatingRowBackground" Value="Aquamarine"/>
+                        <Setter Property="VerticalGridLinesBrush" Value="BlueViolet"/>
+                        <Setter Property="GridLinesVisibility" Value="Vertical"/>
+                    </Style>
+                </TabItem.Resources>
+                <TabItem.Content>
+                    <DockPanel>
+                        <StatusBar DockPanel.Dock="Bottom">
+                            <StatusBarItem Content="Binding"/>
+                        </StatusBar>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="5*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="3*"/>
+                            </Grid.ColumnDefinitions>
+                            <GridSplitter Grid.Column="1" Width="3" HorizontalAlignment="Center" VerticalAlignment="Stretch"
+                                          Background="BlanchedAlmond"/>
+                            <Grid Grid.Column="0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="10*" MinHeight="210"/>
+                                    <RowDefinition Height="9*"/>
+                                </Grid.RowDefinitions>
+                                <GroupBox Grid.Row="0" Header="Ввод данных">
+                                    <DockPanel>
+                                        <StackPanel Width="270" MinWidth="270">
+                                            <TextBlock TextWrapping="Wrap" Text="Поле ниже предназначено для ввода матрицы. Чтобы разделять числа, используйте пробел."/>
+                                            <TextBox TextWrapping="Wrap" AcceptsReturn="True" Height="120" MinHeight="120" Margin="0,5"/>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock TextWrapping="Wrap" Text="Желаемая точность"/>
+                                                <TextBox Width="75" Margin="5,0"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                        <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Right" MinWidth="100">
+                                            <Button Content="Восстановить данные" Margin="0,5"/>
+                                            <Button Content="Сохранить матрицу"/>
+                                        </StackPanel>
+                                    </DockPanel>
+                                </GroupBox>
+                                <GroupBox Grid.Row="1" Header="Результаты">
+                                    <DataGrid>
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Собственное число" MinWidth="100"/>
+                                            <DataGridTextColumn Header="Собственный вектор" MinWidth="300"/>
+                                            <DataGridTextColumn Header="Невязка" Width="*"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </GroupBox>
+                            </Grid>
+                            <GroupBox Grid.Column="2" Header="Матрица Гильберта">
+                                <DockPanel>
+                                    <DataGrid Margin="0,5" DockPanel.Dock="Bottom" MinHeight="110">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Отношение" MinWidth="100"/>
+                                            <DataGridTextColumn Header="Число обусловленности" Width="*"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                    <StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="0,5">
+                                            <TextBlock Text="Размерность"/>
+                                            <TextBox Margin="5,0" Width="100"/>
+                                            <Button Content="Сгенерировать" Margin="10,0"/>
+                                        </StackPanel>
+                                        <TextBox Height="120" IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True"/>
+                                        <TextBlock TextWrapping="Wrap" Margin="0,10" Text="Сформировать отчет-сравнение собственных чисел матрицы Гильберта и отношения наибольшего по модулю собственного числа к наименьшему по модулю собственному числу"/>
+                                        <Button Content="Сформировать" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </DockPanel>
+                            </GroupBox>
+                        </Grid>
+                    </DockPanel>
+                </TabItem.Content>
+            </TabItem>
         </TabControl>
     </DockPanel>
 </Window>
