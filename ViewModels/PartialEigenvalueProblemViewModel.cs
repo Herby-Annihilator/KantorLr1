@@ -226,7 +226,7 @@ namespace KantorLr1.ViewModels
 				double precision = Convert.ToDouble(TextPrecision);
 				var answer = _reshala.FindClosestEigenvalueToAGivenOne(_matrix, _vector, precision, startLambda);
 				ClosestEigenvalue = answer.Eigenvalue.ToString();
-				Status = answer.IterationsCount.ToString();
+				Status = $"Число итераций = {answer.IterationsCount}";
 			}
 			catch(Exception e)
 			{
@@ -241,41 +241,77 @@ namespace KantorLr1.ViewModels
 		public ICommand FindSmallestEigenvalueAbsComand { get; }
 		private void OnFindSmallestEigenvalueAbsComandExecuted(object p)
 		{
-
+			try
+			{
+				double precision = Convert.ToDouble(TextPrecision);
+				SmallestEigenvalueABS = "";
+				var answer = _reshala.FindMinAbsEigenvalue(_matrix, _vector, precision);
+				SmallestEigenvalueABS = answer.Eigenvalue.ToString();
+				Status = $"Число итераций (минимальное по модулю) = {answer.IterationsCount}";
+			}
+			catch (Exception e)
+			{
+				Status = $"Operation failed. Reason: {e.Message}";
+			}
 		}
 		private bool CanFindSmallestEigenvalueAbsComandExecute(object p)
 		{
-			return true;
+			return CanFindLargestEigenvalueABSAndEigenvectorCommandExecute(p);
 		}
 
 		public ICommand FindSmallestEigenvalueCommand { get; }
 		private void OnFindSmallestEigenvalueCommandExecuted(object p)
 		{
-
+			try
+			{
+				double precision = Convert.ToDouble(TextPrecision);
+				SmallestEigenvalue = "";
+				var answer = _reshala.FindMinEigenvalue(_matrix, _vector, precision);
+				SmallestEigenvalue = answer.Eigenvalue.ToString();
+				Status = $"Число итераций (наименьшее соб. число)= {answer.IterationsCount}";
+			}
+			catch(Exception e)
+			{
+				Status = $"Operation failed. Reason: {e.Message}";
+			}
 		}
 		private bool CanFindSmallestEigenvalueCommandExecute(object p)
 		{
-			return true;
+			return CanFindLargestEigenvalueABSAndEigenvectorCommandExecute(p);
 		}
 
 		public ICommand FindLargetsEigenvalueCommand { get; }
 		private void OnFindLargetsEigenvalueCommandExecuted(object p)
 		{
-
+			try
+			{
+				double precision = Convert.ToDouble(TextPrecision);
+				LargestEigenvalue = "";
+				var answer = _reshala.FindMaxEigenvalue(_matrix, _vector, precision);
+				LargestEigenvalue = answer.Eigenvalue.ToString();
+				Status = $"Число итераций  (наибольшее соб. число) = {answer.IterationsCount}";
+			}
+			catch (Exception e)
+			{
+				Status = $"Operation failed. Reason: {e.Message}";
+			}
 		}
 		private bool CanFindLargetsEigenvalueCommandExecute(object p)
 		{
-			return true;
+			return CanFindLargestEigenvalueABSAndEigenvectorCommandExecute(p);
 		}
 
 		public ICommand FindLargestAndSmallestEigenvaluesCommand { get; }
 		private void OnFindLargestAndSmallestEigenvaluesCommandExecuted(object p)
 		{
-
+			OnFindLargetsEigenvalueCommandExecuted(p);
+			string buffer = (string)Status.Clone();
+			OnFindSmallestEigenvalueCommandExecuted(p);
+			Status += " " + buffer;
 		}
 		private bool CanFindLargestAndSmallestEigenvaluesCommandExecute(object p)
 		{
-			return true;
+			return CanFindLargestEigenvalueABSAndEigenvectorCommandExecute(p);
 		}
 		#endregion
 

@@ -511,25 +511,25 @@
                             </DockPanel>
                             <StackPanel Orientation="Horizontal" Grid.Row="4" VerticalAlignment="Center" Margin="5">
                                 <TextBlock Text="Собственное число, ближайшее к заданному λ0"/>
-                                <TextBox Width="100" Margin="5,0" Text="{Binding ClosestEigenvalue}" IsReadOnly="True"/>
+                                <TextBox Width="250" Margin="5,0" Text="{Binding ClosestEigenvalue}" IsReadOnly="True"/>
                             </StackPanel>
                             <Button Grid.Row="4" Content="Найти" VerticalAlignment="Center" Width="100" HorizontalAlignment="Right"
                                     Command="{Binding FindEigenvalueClosestToAGivenOneCommand}"/>
                             <StackPanel Grid.Row="6" Margin="5">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="Наибольшее собственное число матрицы"/>
-                                    <TextBox Width="100" Margin="5,0"/>
+                                    <TextBox Width="250" Margin="5,0" Text="{Binding LargestEigenvalue}" IsReadOnly="True"/>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="0,5">
                                     <TextBlock Text="Наименьшее собственное число матрицы"/>
-                                    <TextBox Width="100" Margin="5,0"/>
+                                    <TextBox Width="250" Margin="5,0" Text="{Binding SmallestEigenvalue}" IsReadOnly="True"/>
                                 </StackPanel>
                             </StackPanel>
                             <Button Grid.Row="6" Content="Найти" VerticalAlignment="Center" Width="100" HorizontalAlignment="Right"
                                     Command="{Binding FindLargestAndSmallestEigenvaluesCommand}"/>
                             <StackPanel Orientation="Horizontal" Grid.Row="8" VerticalAlignment="Center" Margin="5">
                                 <TextBlock Text="Наименьшее по модулю собственное число"/>
-                                <TextBox Width="100" Margin="5,0"/>
+                                <TextBox Width="250" Margin="5,0" Text="{Binding SmallestEigenvalueABS}" IsReadOnly="True"/>
                             </StackPanel>
                             <Button Grid.Row="8" Content="Найти" VerticalAlignment="Center" Width="100" HorizontalAlignment="Right"
                                     Command="{Binding FindSmallestEigenvalueAbsComand}"/>
