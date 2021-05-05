@@ -586,21 +586,22 @@
                                     </DockPanel>
                                 </GroupBox>
                                 <GroupBox Grid.Row="1" Header="Результаты">
-                                    <DataGrid>
+                                    <DataGrid ItemsSource="{Binding FullEigenvalueAnswerCards}">
                                         <DataGrid.Columns>
-                                            <DataGridTextColumn Header="Собственное число" MinWidth="100"/>
-                                            <DataGridTextColumn Header="Собственный вектор" MinWidth="300"/>
-                                            <DataGridTextColumn Header="Невязка" Width="*"/>
+                                            <DataGridTextColumn Header="Собственное число" MinWidth="100" Binding="{Binding Eigenvalue}"/>
+                                            <DataGridTextColumn Header="Собственный вектор" MinWidth="300" Binding="{Binding Eigenvector}"/>
+                                            <DataGridTextColumn Header="Невязка" Width="*" Binding="{Binding Residuals}"/>
                                         </DataGrid.Columns>
                                     </DataGrid>
                                 </GroupBox>
                             </Grid>
                             <GroupBox Grid.Column="2" Header="Матрица Гильберта">
                                 <DockPanel>
-                                    <DataGrid Margin="0,5" DockPanel.Dock="Bottom" MinHeight="110">
+                                    <DataGrid Margin="0,5" DockPanel.Dock="Bottom" MinHeight="110" ItemsSource="{Binding ComparingReportCards}">
                                         <DataGrid.Columns>
-                                            <DataGridTextColumn Header="Отношение" MinWidth="100"/>
-                                            <DataGridTextColumn Header="Число обусловленности" Width="*"/>
+                                            <DataGridTextColumn Header="Размерность" Binding="{Binding Size}"/>
+                                            <DataGridTextColumn Header="Отношение" Binding="{Binding RatioOfMaxEigenvalueAbsAndMinEigenvalueAbs}"/>
+                                            <DataGridTextColumn Header="Число обусловленности" Width="*" Binding="{Binding ConditionNumber}"/>
                                         </DataGrid.Columns>
                                     </DataGrid>
                                     <StackPanel>
@@ -609,7 +610,7 @@
                                             <TextBox Margin="5,0" Width="100" Text="{Binding GilbertMatrixSize, UpdateSourceTrigger=PropertyChanged}"/>
                                             <Button Content="Сгенерировать" Margin="10,0" Command="{Binding GenerateGilbertMatrixCommand}"/>
                                         </StackPanel>
-                                        <TextBox Height="120" IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True"/>
+                                        <TextBox Height="120" IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True" Text="{Binding TextGilbertMatrix}"/>
                                         <TextBlock TextWrapping="Wrap" Margin="0,10" Text="Сформировать отчет-сравнение собственных чисел матрицы Гильберта и отношения наибольшего по модулю собственного числа к наименьшему по модулю собственному числу"/>
                                         <Button Content="Сформировать" HorizontalAlignment="Center" Command="{Binding GenerateReportCommand}"/>
                                     </StackPanel>
