@@ -159,6 +159,7 @@ namespace KantorLr1.ViewModels
 					conditionNumber = _reshala.GetMatrixMNorm(gilbertMatrix);
 					gilbertMatrix = _reshala.GetReversedMatrix(gilbertMatrix, new GaussMethodCreator());
 					conditionNumber *= _reshala.GetMatrixMNorm(gilbertMatrix);
+					RoundMatrix(gilbertMatrix, 5);
 					ComparingReportCards.Add(new ComparingReportCard(k, FindRatio(_reshala.SolveFullEigenValueProblem(gilbertMatrix, precision)), conditionNumber));
 				}
 				Status = "Report generated";
@@ -235,6 +236,17 @@ namespace KantorLr1.ViewModels
 				}
 			}
 			return max / min;
+		}
+
+		private void RoundMatrix(double[][] matrix, int numbersAfterPoint)
+		{
+			for (int i = 0; i < matrix.GetLength(0); i++)
+			{
+				for (int j = 0; j < matrix[i].Length; j++)
+				{
+					matrix[i][j] = Math.Round(matrix[i][j], numbersAfterPoint);
+				}
+			}
 		}
 	}
 }
